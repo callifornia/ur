@@ -2,7 +2,7 @@ package com.prokopiv.controllers;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.prokopiv.service.UserService;
+
 @Controller
 public class MainController {
 
 	private static Logger logger = LogManager.getLogger(LoginController.class);
 
+	@Autowired
+	UserService userService;
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )
 	public String search(){
@@ -45,13 +49,13 @@ public class MainController {
 	
 	@RequestMapping(value = "/users")
 	public String users(Model model)	{
-
 		logger.info("SHOW USERS JSP WITH ALL USERS");
 		if(model.containsAttribute("success")){
 			logger.info("has key: " + model.asMap().get("success"));
 		} else {
 			logger.info("dont have a key success");
 		}
+		model.addAttribute("user", userService.getUserList());
 		return "users";
 	}
 		
@@ -66,7 +70,8 @@ public class MainController {
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
 		redirectAttribute.addFlashAttribute("success", "Succesful user delete");
-		logger.info("DELETE USER. (add modell attribute . add success)" + id);
+		logger.info("DELETE USER. (add modell attribute(add success) id() => )" + id);
+		userService.deleteUser(id);
 		return "redirect:/users";
 	}
 }

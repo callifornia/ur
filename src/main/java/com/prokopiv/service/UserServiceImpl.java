@@ -2,13 +2,18 @@ package com.prokopiv.service;
 
 import java.util.List;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.prokopiv.bean.User;
 import com.prokopiv.dao.UserDao;
 
+@Service
 public class UserServiceImpl implements UserService {
+	
+	private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 	
 	@Autowired
 	UserDao userDao;
@@ -40,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean deleteUser(String id) {
+		logger.info("UserServiceImpl: delete method. userId: " + id);
 		return userDao.deleteUser(id);
 	}
 }

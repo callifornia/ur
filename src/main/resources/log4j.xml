@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.prokopiv.controllers">
+	<logger name="com.prokopiv">
 		<level value="info" />
 	</logger>
 	

@@ -10,9 +10,13 @@
 	    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<annotation-driven />
-	<context:component-scan base-package="com.prokopiv.controllers" />
-	<resources mapping="/resources/**" location="/resources/" />
+	<context:annotation-config  />
+	<context:component-scan base-package="com.prokopiv" />
 	<security:global-method-security secured-annotations="enabled" />
+	<resources mapping="/resources/**" location="/resources/" />
+
+
+	<beans:bean scope="singleton" id="userListTemp" class="com.prokopiv.bean.UserListTemp" init-method="makeUserList" />
 	
 	<interceptors>
 		<beans:bean id="webContentInterceptor"

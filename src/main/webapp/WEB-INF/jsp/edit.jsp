@@ -18,9 +18,9 @@
 		<a href="../message"> Show messages</a><br><br>
 	</sec:authorize>
 	
-	<form action="../update" method = "post">
+	<form action="${pageContext.request.contextPath}/update" method = "post">
 		<input type="submit" value="Save user">
-		<a href="../users"> Cancel </a>
+		<a href="${pageContext.request.contextPath}/users"> Cancel </a>
 	</form>
 </h1>
 </body>

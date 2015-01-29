@@ -2,6 +2,7 @@ package com.prokopiv.dao.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.prokopiv.bean.User;
@@ -10,40 +11,38 @@ import com.prokopiv.dao.UserDao;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+	
+	@Autowired
+	UserListTemp userListTemp;
 
 	@Override
 	public User getUserById(String id) {
-		return new UserListTemp().makeUserList().get(Integer.valueOf(id));
+		return userListTemp.getUserById(id);
 	}
 
 	@Override
 	public List<User> getUserListBySearch(String login) {
-		// TODO Auto-generated method stub
-		return null;
+		return userListTemp.getUserList();
 	}
 
 	@Override
 	public List<User> getUserList() {
-		return new UserListTemp().makeUserList();
+		return new UserListTemp().getUserList();
 	}
 
 	@Override
 	public boolean insertUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
+		userListTemp.inserUser(user);
+		return true;
 	}
 
 	@Override
 	public boolean updateUser(User user) {
-		// TODO Auto-generated method stub
-		return false;
+		return userListTemp.updateUser(user);
 	}
 
 	@Override
 	public boolean deleteUser(String id) {
-		// TODO Auto-generated method stub
-		return false;
+		return userListTemp.deleteUser(id);
 	}
-
-	
 }

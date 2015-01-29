@@ -22,14 +22,50 @@
 	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
 		<a href="message"> Send message</a><br><br>
 	</sec:authorize>
-	
-	<sec:authorize access="hasRole('ROLE_ADMIN')" >
-		<a href="message"> Show all message</a><br><br>
-		<a href="edit/12"> Edit page</a><br>
-		<a href="delete/12"> Delete user(see logger)</a><br>
-		<a href="register"> Register user(see logger)</a><br><br>
-	</sec:authorize>
 	<a href="search"> Search page</a><br>
+	<a href="register">Register user</a><br><br>
+	
+	<table border = 1 align="center">
+		<tr style = "font-weight: bold; font-size: 22px;" align="center">
+			<td>User id</td>
+			<td>User login</td>
+			<td>User password</td>
+			<td>User role</td>
+			<td>User lastName</td>
+			<td>User phone</td>
+			<td>User mail</td>
+			<td>User adress</td>
+			<td>User Gender</td>
+			<td>User Birthday</td>
+			<td>User Education</td>
+			<td>User Description</td>
+			<sec:authorize access="hasRole('ROLE_ADMIN')"> 
+				<td>User Action</td>
+			</sec:authorize>
+		</tr>
+		<c:forEach var="user" items="${user}">
+		<tr>
+			<td>${user.userId}</td>
+			<td>${user.userLogin}</td>
+			<td>${user.userPassword}</td>
+			<td>${user.userRole}</td>
+			<td>${user.userlastName}</td>
+			<td>${user.userPhone }</td>
+			<td>${user.userMail}</td>
+			<td>${user.userAdress}</td>
+			<td>${user.userGender}</td>
+			<td>${user.userBirthday}</td>
+			<td>${user.userEducation}</td>
+			<td>${user.userDescription}</td>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+			<td> 
+				<a href="edit/${user.userId}">Edit page</a>
+				<a href="delete/${user.userId}">Delete user</a>
+			</td>
+			</sec:authorize>
+		</tr>
+		</c:forEach>
+	</table>
 	
 </body>
 </html>
