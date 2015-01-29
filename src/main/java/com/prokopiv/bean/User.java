@@ -15,7 +15,7 @@ public class User {
 	private String userEducation;
 	private String userDescription;
 	
-	
+	public User() {}
 	
 	public User(String userId, String userLogin, String userPassword,
 			String userRole, String userlastName, String userPhone,

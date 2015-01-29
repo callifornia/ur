@@ -1,16 +1,21 @@
 package com.prokopiv.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.prokopiv.bean.User;
 import com.prokopiv.service.UserService;
 
 @Controller
@@ -28,8 +33,25 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String register(ModelMap model)	{
-		logger.info("SHOW REGISTER PAGE");
+	public String register(@ModelAttribute User user, Model model)	{
+		
+		List<String> userGender = new ArrayList<String>(); 
+		userGender.add("Male");
+		userGender.add("Female");
+		
+		List<String> userRole = new ArrayList<String>();
+		userRole.add("User");
+		userRole.add("Admin");
+		
+
+		List<String> userEducation = new ArrayList<String>();
+		userEducation.add("Degree");
+		userEducation.add("Master Degree");
+		
+		model.addAttribute("roles", userRole);
+		model.addAttribute("genders", userGender);
+		model.addAttribute("education", userEducation);
+		
 		return "register";
 	}
 

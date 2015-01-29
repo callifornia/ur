@@ -15,10 +15,78 @@
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="message"> Show messages</a><br><br>
 	</sec:authorize><br><br>
-	<form action="insert" method="post">
+
+	<form:form action="insert" method="post" modelAttribute="user" >
+	<table>
+		<tr>
+			<td>
+				<p>User Login <form:input path='userLogin'/></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User User Password <form:input path="userPassword"/></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User Role  
+					<form:radiobuttons path="userRole" items="${roles}"/>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User last name <form:input path="userlastName"/></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User phone <form:input path="userPhone"/></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User mail <form:input path="userMail"/></p> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User adress <form:textarea path="userAdress"/></p> 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User gender <form:select path="userGender" > 
+									<form:options items="${genders}"/>
+							   </form:select> 
+					
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>User birthday <form:input path="userBirthday"/></p>
+			</td>
+		</tr>		
+		<tr>
+			<td>
+				<p>User education 
+					<form:select path="userEducation">
+						<form:options items="${education}"/>
+					</form:select>
+				</p>
+			</td>
+		</tr>		
+		<tr>
+			<td>
+				<p>User description <form:textarea path="userDescription"/></p> 
+			</td>
+		</tr>
+	</table>
 		<input type = "submit" value="Register user">
 		<a href="users"> Cancel </a>
-	</form>
+	</form:form>
 
 </body>
 </html>

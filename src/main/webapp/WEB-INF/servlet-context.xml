@@ -17,6 +17,7 @@
 
 
 	<beans:bean scope="singleton" id="userListTemp" class="com.prokopiv.bean.UserListTemp" init-method="makeUserList" />
+	<beans:bean id = "user" class = "com.prokopiv.bean.User" />
 	
 	<interceptors>
 		<beans:bean id="webContentInterceptor"

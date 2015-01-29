@@ -38,7 +38,11 @@ public class UserListTemp {
 				userIndex = list.indexOf(user);
 			}
 		}
-		list.remove(userIndex);
+		if(userIndex != -1){
+			list.remove(userIndex);
+		} else{
+			System.out.print("asd");
+		}
 		logger.info("UserListTemp: delete user with id: " + id + "listSize after: " + list.size() );
 		return true;
 	}
