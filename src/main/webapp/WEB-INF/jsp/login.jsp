@@ -20,6 +20,9 @@
 			<tr>
 				<td>User: </td>
 				<td><input type = "text" name = "j_username"></td>
+				<script>
+  					document.getElementsByName('j_username')[0].focus();
+				</script>
 			</tr>
 			<tr>
 				<td>Password: </td>

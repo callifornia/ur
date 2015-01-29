@@ -2,6 +2,7 @@ package com.prokopiv.controllers;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ public class MessageController {
 	private static final Logger logger = LogManager.getLogger(MessageController.class);
 
 	
+	@Secured(value = "ROLE_REGULAR_USER")
 	@RequestMapping(value = "/message/send", method = RequestMethod.POST)
 	public String sendMessage(Model model, RedirectAttributes redirectAttribute){
 		logger.info("SEND MESSAGE TO THE ADMIN AND REDIRECT WITH ALL GOOD TO THE MESSAGE LIST");
@@ -22,6 +24,7 @@ public class MessageController {
 		return "redirect:/message";
 	}
 
+	@Secured(value = "ROLE_REGULAR_USER")
 	@RequestMapping(value = "/message/new_message", method = RequestMethod.GET)
 	public String createMessage(Model model){
 		logger.info("CREATE MESSAGE JSP");
@@ -41,7 +44,5 @@ public class MessageController {
 		}
 		logger.info("SHOW LIST MESSAGES");
 		return "admin_messages";
-		
 	}
-
 }

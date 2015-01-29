@@ -11,7 +11,8 @@
 		Access denied.
 	</h1>
 	<p>${message}</p>
-	<a href="main">Go to main page</a>
+	<p>current path: ${pageContext.request.contextPath}</p>
+	<a href="${pageContext.request.contextPath}/users">Go to main page</a>
 
 </body>
 </html>

@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:security="http://www.springframework.org/schema/security"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<beans:bean id="dataSource"	class="org.springframework.jdbc.datasource.DriverManagerDataSource">	
-		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/dbusers" />
-		<beans:property name="username" value="root" />
-		<beans:property name="password" value="root" />
-	</beans:bean>
-	
-	
-
-	<beans:bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
-
+	<bean id="dataSource"	class="org.springframework.jdbc.datasource.DriverManagerDataSource">	
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/dbusers" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
 
 	
-	<security:http auto-config="true" >
-		<security:access-denied-handler error-page="/403"/>
-		 <security:intercept-url pattern="/search/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		 <security:intercept-url pattern="/register/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		 <security:intercept-url pattern="/edit/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		 <security:intercept-url pattern="/users/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		 <security:intercept-url pattern="/message/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		 <security:intercept-url pattern="/delete/**" access="ROLE_ADMIN, ROLE_REGULAR_USER" />
-		<!--<security:intercept-url pattern="/common*" access="ROLE_REGULAR_USER" />
-		<security:intercept-url pattern="/admin*" access="ROLE_ADMIN" /> -->
-		<security:form-login login-page="/login" 
+	 <security:global-method-security secured-annotations="enabled" />
+	 <security:http auto-config="true" use-expressions="true">
+		 <security:access-denied-handler error-page="/403"/>
+		
+		 <security:intercept-url pattern="/" access="permitAll" />
+		 <security:intercept-url pattern="/login" access="permitAll" />
+		 <security:intercept-url pattern="/loginError" access="permitAll" />
+		 
+		 <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_REGULAR_USER')" />
+
+		 <security:intercept-url pattern="/edit**" access="hasRole('ROLE_ADMIN')" />
+		 <security:intercept-url pattern="/insert" access="hasRole('ROLE_ADMIN')" />
+		 <security:intercept-url pattern="/register" access="hasRole('ROLE_ADMIN')" />
+		 <security:intercept-url pattern="/update" access="hasRole('ROLE_ADMIN')" />
+		 
+		 <security:form-login login-page="/login" 
 							 default-target-url="/search" 
 							 authentication-failure-url="/loginError" />
-		<security:logout logout-url="/logout" 
-					invalidate-session="true"  
-					delete-cookies="JSESSIONID"/>
-		<security:remember-me key="uniqueAndSecret" 
+		
+		 <security:logout logout-url="/logout" 
+					invalidate-session="true"/>
+		 
+		 <security:remember-me key="uniqueAndSecret" 
 								token-validity-seconds="86400"
 								remember-me-parameter="remember-me" />		
 	</security:http>
@@ -45,9 +44,7 @@
 			<security:user-service>
 				<security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
 				<security:user name="user" password="user" authorities="ROLE_REGULAR_USER"/>
-			
 			</security:user-service>		
-		
 		</security:authentication-provider>
 	</security:authentication-manager>
 
@@ -61,4 +58,4 @@
 		</security:authentication-provider>
 	</security:authentication-manager> -->
 
-</beans:beans>
+</beans>

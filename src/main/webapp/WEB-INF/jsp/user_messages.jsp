@@ -5,6 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+  	$('.message').delay(3000).fadeOut(800);
+});
+</script>
 </head>
 <body>
 
@@ -21,8 +27,8 @@
 	<h1> USER MESSAGES PAGE </h1>
 	<h2> LIST OF MY MESSAGES</h2>
 	<h2> Date, Read or not</h2>
-		<c:if test="${not empty message}">
-		 <font color="red">${message}</font>
+	<c:if test="${not empty message}">
+		 <font class = "message" color="red">${message}</font>
 	</c:if>
 	
 

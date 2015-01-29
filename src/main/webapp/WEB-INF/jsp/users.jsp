@@ -6,11 +6,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+  	$('.message').delay(3000).fadeOut(800);
+});
+</script>
+
 </head>
 <body>
 	<h1>Users page</h1>
 	<p> Login as: <sec:authentication property="name"/></p><br>
-	<c:if test="${not empty success}"> <p>${success}</p><br><br></c:if>
+	<c:if test="${not empty success}"> <p class = "message">${success}</p><br><br></c:if>
 	<a href="logout"> Logout </a><br>
 	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
 		<a href="message"> Send message</a><br><br>
