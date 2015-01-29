@@ -11,9 +11,9 @@
 	<h1>Edit page</h1><br>
 	<p> Login as: <sec:authentication property="name"/></p>
 	
-	<a href="../logout">Logout</a><br>
-	<a href="../search">Search page </a><br>
-	<a href="../users">Users page </a><br>
+	<a href="${pageContext.request.contextPath}/logout">Logout</a><br>
+	<a href="${pageContext.request.contextPath}/search">Search page </a><br>
+	<a href="${pageContext.request.contextPath}/users">Users page </a><br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="../message"> Show messages</a><br><br>
 	</sec:authorize>

@@ -10,16 +10,16 @@
 
 <p>Login as: <sec:authentication property="name"/></p>
 
-	<a href="../logout"> Logout </a><br>
-	<a href="../search">Search page</a><br>
-	<a href="../users">Show all users</a><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
+	<a href="${pageContext.request.contextPath}/users">Show all users</a><br>
 	<h1> NEW MESSAGES PAGE </h1>
 	<h2> MESSAGE FORM</h2>
 	<h2> TEXT and button send</h2><br><br>
 
 	<form action="send" method="post">
 		<input type = "submit" value="Register user">
-		<a href="../message"> Cancel </a>
+		<a href="${pageContext.request.contextPath}/message"> Cancel </a>
 	</form>
 </body>
 
