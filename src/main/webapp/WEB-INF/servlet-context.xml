@@ -17,8 +17,14 @@
 
 
 	<beans:bean scope="singleton" id="userListTemp" class="com.prokopiv.bean.UserListTemp" init-method="makeUserList" />
-	<beans:bean id = "user" class = "com.prokopiv.bean.User" />
 	
+	<beans:bean id = "user" class = "com.prokopiv.bean.User" />
+	<beans:bean id="userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
+	
+	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <beans:property name="basename" value="messages" />
+    </beans:bean>
+    
 	<interceptors>
 		<beans:bean id="webContentInterceptor"
 			class="org.springframework.web.servlet.mvc.WebContentInterceptor">

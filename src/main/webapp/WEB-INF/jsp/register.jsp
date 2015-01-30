@@ -20,53 +20,64 @@
 	<table>
 		<tr>
 			<td>
-				<p>User Login <form:input path='userLogin'/></p>
+				<p>User Login <form:input path='userLogin'/> 
+				<form:errors path="userLogin" /></p>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User User Password <form:input path="userPassword"/></p>
+				<p>User Password <form:input path="userPassword"/>
+				<form:errors path="userPassword" /></p>
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>User Role  
 					<form:radiobuttons path="userRole" items="${roles}"/>
+					<form:errors path="userRole" /></p>
 				</p>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User last name <form:input path="userlastName"/></p>
+				<p>User last name <form:input path="userlastName"/>
+					<form:errors path="userlastName" /></p>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User phone <form:input path="userPhone"/></p>
+				<p>User phone(012)345-6789 <form:input path="userPhone"/>
+					<form:errors path="userPhone" /></p>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User mail <form:input path="userMail"/></p> 
+				<p>
+					User mail(optional) <form:input path="userMail"/>
+					<form:errors path="userMail" />
+				</p> 
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User adress <form:textarea path="userAdress"/></p> 
+				<p>User adress(optional) <form:textarea path="userAdress"/>
+					<form:errors path="userAdress" />
+				</p> 
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p>User gender <form:select path="userGender" > 
 									<form:options items="${genders}"/>
+									<form:option value=""></form:option>
 							   </form:select> 
-					
+							   <form:errors path="userGender" />
 				</p>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p>User birthday <form:input path="userBirthday"/></p>
+				<p>User birthday (optional) <form:input path="userBirthday"/></p>
 			</td>
 		</tr>		
 		<tr>
@@ -75,12 +86,16 @@
 					<form:select path="userEducation">
 						<form:options items="${education}"/>
 					</form:select>
+					<form:errors path="userEducation" />
 				</p>
 			</td>
 		</tr>		
 		<tr>
 			<td>
-				<p>User description <form:textarea path="userDescription"/></p> 
+				<p>
+					User description(optional) <form:textarea path="userDescription"/>
+					<form:errors path="userDescription" />
+				</p> 
 			</td>
 		</tr>
 	</table>

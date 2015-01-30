@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prokopiv.bean.User;
+import com.prokopiv.formvalidation.UserFormValidation;
 import com.prokopiv.service.UserService;
 
 @Controller
@@ -26,6 +31,14 @@ public class MainController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	UserFormValidation userFormValidation;
+	
+	@InitBinder
+	private void initBinder(WebDataBinder dataBinder){
+		dataBinder.setValidator(userFormValidation);
+	}
+	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )
 	public String search(){
 		logger.info("/SEARCH PAGE. SHOW SEARCH FORM");
@@ -34,32 +47,21 @@ public class MainController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(@ModelAttribute User user, Model model)	{
-		
-		List<String> userGender = new ArrayList<String>(); 
-		userGender.add("Male");
-		userGender.add("Female");
-		
-		List<String> userRole = new ArrayList<String>();
-		userRole.add("User");
-		userRole.add("Admin");
-		
-
-		List<String> userEducation = new ArrayList<String>();
-		userEducation.add("Degree");
-		userEducation.add("Master Degree");
-		
-		model.addAttribute("roles", userRole);
-		model.addAttribute("genders", userGender);
-		model.addAttribute("education", userEducation);
-		
+		insertList(model);
 		return "register";
 	}
-
+	
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public String insert(ModelMap model, RedirectAttributes redirectAttribute)	{
-		logger.info("INSERT USER IN TO THE DATA BASE. (add modell attributte. add success)");
-		redirectAttribute.addFlashAttribute("success", "Succesful user registered");
-		return "redirect:/users";
+	public String insert(@Validated User user,BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute)	{
+		if(bindingResult.hasErrors()){
+			insertList(model);
+			model.addAttribute("user", user);
+			return "register";
+		} else {
+			redirectAttribute.addFlashAttribute("success", "Succesful user registered");
+			userService.insertUser(user);
+			return "redirect:/users";
+		}
 	}
 	
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -96,4 +98,24 @@ public class MainController {
 		userService.deleteUser(id);
 		return "redirect:/users";
 	}
+	
+	private void insertList(Model model){
+		List<String> userGender = new ArrayList<String>(); 
+		userGender.add("Male");
+		userGender.add("Female");
+		
+		List<String> userRole = new ArrayList<String>();
+		userRole.add("User");
+		userRole.add("Admin");
+		
+
+		List<String> userEducation = new ArrayList<String>();
+		userEducation.add("Degree");
+		userEducation.add("Master Degree");
+		
+		model.addAttribute("roles", userRole);
+		model.addAttribute("genders", userGender);
+		model.addAttribute("education", userEducation);
+	}
+
 }

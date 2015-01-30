@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.validation.Validator;
 
 public class UserListTemp {
 
@@ -25,6 +26,7 @@ public class UserListTemp {
 	}
 
 	public boolean inserUser(User user) {
+		user.setUserId("00");
 		list.add(user);
 		return true;
 	}
