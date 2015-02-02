@@ -55,6 +55,8 @@ public class UserListTemp {
 		}
 		for (User oldUser : list) {
 			if (oldUser.getUserId().equalsIgnoreCase(user.getUserId())) {
+				
+				oldUser.setUserLogin(user.getUserLogin());
 				oldUser.setUserAdress(user.getUserAdress());
 				oldUser.setUserBirthday(user.getUserAdress());
 				oldUser.setUserDescription(user.getUserDescription());
@@ -73,10 +75,10 @@ public class UserListTemp {
 	private List<User> makeUserList() {
 		for (int i = 1; i < 100; i++) {
 			User user = new User("" + i, "adminLogin_" + i,
-					"adminPassword_" + i, "adminRole_" + i,
-					"userLastName_" + i, "userPhone_" + i, "userMail_" + i,
-					"userAdress_" + i, "userGender_" + i, "userBirthDay_" + i,
-					"userEducation_" + i, "userDescription_" + i);
+					"adminPassword_" + i, "ROLE_ADMIN",
+					"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
+					"userAdress_" + i, "Male", "userBirthDay_" + i,
+					"Degree", "Master Degree");
 			list.add(user);
 		}
 		return list;

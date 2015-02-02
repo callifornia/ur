@@ -1,7 +1,9 @@
 package com.prokopiv.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -64,10 +66,31 @@ public class MainController {
 		}
 	}
 	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public String update(@ModelAttribute(value="user") @Validated User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute){
+		if(bindingResult.hasErrors()){
+			model.addAttribute("user", user);
+			insertList(model);
+			return "edit";
+		} else {
+			userService.updateUser(user);
+			logger.info("UPDATE USER IN DATA BASE. (add model attribute. add success)");
+			redirectAttribute.addFlashAttribute("success", "Succesful user update");
+			return "redirect:users";
+		}
+	}
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String edit(@PathVariable("id") String id, ModelMap model){
-		logger.info("/edit/{id}: " + id);
-		return "edit";
+	public String edit(@PathVariable("id") String id, Model model){
+		insertList(model);
+		if(model.containsAttribute("user")){
+			return "edit";
+		} else{
+			logger.info("/edit/{id}: " + id);
+			User user = userService.getUserById(id);
+			model.addAttribute("user", user);
+			return "edit";
+		}
 	}
 	
 	
@@ -83,13 +106,6 @@ public class MainController {
 		return "users";
 	}
 		
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(Model model, RedirectAttributes redirectAttributes){
-		
-		logger.info("UPDATE USER IN DATA BASE. (add model attribute. add success)");
-		redirectAttributes.addFlashAttribute("success", "Succesful user update");
-		return "redirect:users";
-	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
@@ -104,11 +120,10 @@ public class MainController {
 		userGender.add("Male");
 		userGender.add("Female");
 		
-		List<String> userRole = new ArrayList<String>();
-		userRole.add("User");
-		userRole.add("Admin");
+		Map<String,String> userRole = new HashMap<String,String>();
+		userRole.put("ROLE_ADMIN", "Admin");
+		userRole.put("ROLE_REGULAR_USER", "User");
 		
-
 		List<String> userEducation = new ArrayList<String>();
 		userEducation.add("Degree");
 		userEducation.add("Master Degree");
