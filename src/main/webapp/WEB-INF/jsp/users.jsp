@@ -57,8 +57,8 @@
 			<td>${user.userEducation}</td>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			<td> 
-				<a href="edit/${user.userId}">Edit page</a>
-				<a href="delete/${user.userId}">Delete user</a>
+				<a href="edit/${user.userId}">Edit </a>
+				<a href="delete/${user.userId}">Delete </a>
 			</td>
 			</sec:authorize>
 		</tr>
