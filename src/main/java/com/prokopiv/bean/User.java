@@ -1,5 +1,7 @@
 package com.prokopiv.bean;
 
+import java.util.Date;
+
 public class User {
 	
 	private String userId;
@@ -11,7 +13,7 @@ public class User {
 	private String userMail;
 	private String userAdress;
 	private String userGender;
-	private String userBirthday;
+	private Date userBirthday;
 	private String userEducation;
 	private String userDescription;
 	
@@ -20,7 +22,7 @@ public class User {
 	public User(String userId, String userLogin, String userPassword,
 			String userRole, String userlastName, String userPhone,
 			String userMail, String userAdress, String userGender,
-			String userBirthday, String userEducation, String userDescription) {
+			 String userEducation, String userDescription) {
 
 		this.userId = userId;
 		this.userLogin = userLogin;
@@ -31,7 +33,6 @@ public class User {
 		this.userMail = userMail;
 		this.userAdress = userAdress;
 		this.userGender = userGender;
-		this.userBirthday = userBirthday;
 		this.userEducation = userEducation;
 		this.userDescription = userDescription;
 	}
@@ -90,11 +91,11 @@ public class User {
 	public void setUserGender(String userGender) {
 		this.userGender = userGender;
 	}
-	public String getUserBirthday() {
+	public Date getUserBirthday() {
 		return userBirthday;
 	}
-	public void setUserBirthday(String userBirthday) {
-		this.userBirthday = userBirthday;
+	public void setUserBirthday(Date userBirthday) {
+			this.userBirthday = userBirthday;
 	}
 	public String getUserEducation() {
 		return userEducation;
@@ -107,9 +108,5 @@ public class User {
 	}
 	public void setUserDescription(String userDescription) {
 		this.userDescription = userDescription;
-	}
-
-	
-	
-	
+	}	
 }

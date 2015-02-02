@@ -1,6 +1,8 @@
 package com.prokopiv.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -38,7 +41,12 @@ public class MainController {
 	
 	@InitBinder
 	private void initBinder(WebDataBinder dataBinder){
+	
 		dataBinder.setValidator(userFormValidation);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
+		CustomDateEditor custom = new CustomDateEditor(dateFormat, false);
+		dataBinder.registerCustomEditor(Date.class, custom);
+
 	}
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )

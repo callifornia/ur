@@ -27,36 +27,34 @@
 	
 	<table border = 1 align="center">
 		<tr style = "font-weight: bold; font-size: 22px;" align="center">
-			<td>User id</td>
 			<td>User login</td>
-			<td>User password</td>
 			<td>User role</td>
 			<td>User lastName</td>
 			<td>User phone</td>
-			<td>User mail</td>
-			<td>User adress</td>
 			<td>User Gender</td>
-			<td>User Birthday</td>
 			<td>User Education</td>
-			<td>User Description</td>
 			<sec:authorize access="hasRole('ROLE_ADMIN')"> 
 				<td>User Action</td>
 			</sec:authorize>
 		</tr>
 		<c:forEach var="user" items="${user}">
 		<tr>
-			<td>${user.userId}</td>
 			<td>${user.userLogin}</td>
-			<td>${user.userPassword}</td>
-			<td>${user.userRole}</td>
+			<c:choose>
+				<c:when test="${user.userRole == 'ROLE_ADMIN' }">
+					<td>admin</td>
+				</c:when>
+				<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
+					<td>user</td>
+				</c:when>
+				<c:otherwise>
+					<td>unknown role</td>
+				</c:otherwise>
+			</c:choose>
 			<td>${user.userlastName}</td>
 			<td>${user.userPhone }</td>
-			<td>${user.userMail}</td>
-			<td>${user.userAdress}</td>
 			<td>${user.userGender}</td>
-			<td>${user.userBirthday}</td>
 			<td>${user.userEducation}</td>
-			<td>${user.userDescription}</td>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			<td> 
 				<a href="edit/${user.userId}">Edit page</a>

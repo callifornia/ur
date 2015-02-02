@@ -3,8 +3,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
+	
+	<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.10.2.js' />"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/jquery-ui.js' />"></script>
+  	<link href="<c:url value='/resources/css/jquery-ui.css' />" rel="stylesheet" type="text/css"/>
+  	<script type="text/javascript">
+ 		 $(function() {
+    		$( "#datepicker" ).datepicker({
+    			dateFormat: "dd-mm-yy"
+    		});
+  		});
+  </script>
+
 </head>
 <body>
 <h1>Register page</h1><br>
@@ -49,7 +61,7 @@
 				<p>User phone(012)345-6789 <form:input path="userPhone"/>
 					<form:errors path="userPhone" /></p>
 			</td>
-		</tr>
+		</tr> 
 		<tr>
 			<td>
 				<p>
@@ -77,7 +89,8 @@
 		</tr>
 		<tr>
 			<td>
-				<p>User birthday (optional) <form:input path="userBirthday"/></p>
+				<p>User birthday (optional) <form:input  id="datepicker" path="userBirthday"/></p>
+				
 			</td>
 		</tr>		
 		<tr>
@@ -89,7 +102,7 @@
 					<form:errors path="userEducation" />
 				</p>
 			</td>
-		</tr>		
+		</tr>		 
 		<tr>
 			<td>
 				<p>

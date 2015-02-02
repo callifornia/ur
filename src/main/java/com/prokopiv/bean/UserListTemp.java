@@ -1,6 +1,7 @@
 package com.prokopiv.bean;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
@@ -58,7 +59,7 @@ public class UserListTemp {
 				
 				oldUser.setUserLogin(user.getUserLogin());
 				oldUser.setUserAdress(user.getUserAdress());
-				oldUser.setUserBirthday(user.getUserAdress());
+				oldUser.setUserBirthday(user.getUserBirthday());
 				oldUser.setUserDescription(user.getUserDescription());
 				oldUser.setUserEducation(user.getUserEducation());
 				oldUser.setUserGender(user.getUserGender());
@@ -74,10 +75,27 @@ public class UserListTemp {
 
 	private List<User> makeUserList() {
 		for (int i = 1; i < 100; i++) {
+			if( i == 1){
+				User user = new User("" + i, "adminLogin_" + i,
+						"adminPassword_" + i, "ROLE_ADMIN",
+						"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
+						"userAdress_" + i, "Male", 
+						"Degree", "Master Degree");
+				list.add(user);
+			}
+			if( i == 2){
+				User user = new User("" + i, "adminLogin_" + i,
+						"adminPassword_" + i, "ROLE_PIUPIU",
+						"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
+						"userAdress_" + i, "Male", 
+						"Degree", "Master Degree");
+				list.add(user);
+			}
+			
 			User user = new User("" + i, "adminLogin_" + i,
-					"adminPassword_" + i, "ROLE_ADMIN",
+					"adminPassword_" + i, "ROLE_REGULAR_USER",
 					"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
-					"userAdress_" + i, "Male", "userBirthDay_" + i,
+					"userAdress_" + i, "Male", 
 					"Degree", "Master Degree");
 			list.add(user);
 		}

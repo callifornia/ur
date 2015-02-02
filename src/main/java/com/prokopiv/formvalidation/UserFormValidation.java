@@ -10,6 +10,8 @@ import org.springframework.validation.Validator;
 import com.prokopiv.bean.User;
 
 public class UserFormValidation implements Validator {
+	
+	
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -45,8 +47,8 @@ public class UserFormValidation implements Validator {
 		if(!user.getUserMail().isEmpty() && !isEmailValid(user.getUserMail())){
 			errors.rejectValue("userMail", "user.err.mail");
 		}
+		
 	}
-	
 	private boolean isPhoneNumberValid(String phoneNumber){  
 		String expression = "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$";
 		return isValid(phoneNumber, expression);
