@@ -14,7 +14,7 @@
 </script>
 
 </head>
-<body>
+<body> 
 	<h1>Users page</h1>
 	<p> Login as: <sec:authentication property="name"/></p><br>
 	<c:if test="${not empty success}"> <p class = "message">${success}</p><br><br></c:if>
