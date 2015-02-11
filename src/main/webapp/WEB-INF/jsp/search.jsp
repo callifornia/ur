@@ -21,5 +21,33 @@
 	</sec:authorize>
 
 	<a href="users"> Show all users</a>
+	
+	<%-- <form:form name="searchForm" action="users" method = "POST" modelAttribute="search">
+		<table>
+			<tr>
+				<td>Search: </td>
+				<td>
+					<form:input name = "name" path="searchRow"/> 
+				</td>
+				<script>
+  					document.getElementsByName('name')[0].focus();
+				</script>
+			</tr>
+			<tr>
+				<td>
+					<form:radiobutton path="searchType" value="phone"/> phone <br>
+					<form:radiobutton path="searchType" value="lastName" />lastName<br>
+					
+				</td>
+			
+			</tr>
+			
+			<tr>
+				<td>
+					<input type = "submit" name = "submit" value = "submit">
+				</td>
+			</tr>						
+		</table>
+	</form:form> --%>
 </body>
 </html>

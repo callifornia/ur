@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
+import com.prokopiv.formvalidation.SearchFormValidator;
 import com.prokopiv.formvalidation.UserFormValidation;
 import com.prokopiv.service.UserService;
 
@@ -39,24 +42,27 @@ public class MainController {
 	@Autowired
 	UserFormValidation userFormValidation;
 	
-	@InitBinder
-	private void initBinder(WebDataBinder dataBinder){
+	@Autowired
+	SearchFormValidator searchValidator;
 	
+	@InitBinder(value = "user")
+	private void initUserBinder(WebDataBinder dataBinder){
+		logger.info(" ======================> date and userValidate");
 		dataBinder.setValidator(userFormValidation);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
-		CustomDateEditor custom = new CustomDateEditor(dateFormat, false);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		CustomDateEditor custom = new CustomDateEditor(dateFormat, true);
 		dataBinder.registerCustomEditor(Date.class, custom);
-
 	}
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )
-	public String search(){
+	public String search(Model model){
+		model.addAttribute("search", searchValidator);
 		logger.info("/SEARCH PAGE. SHOW SEARCH FORM");
 		return "search";
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String register(@ModelAttribute User user, Model model)	{
+	public String register(@ModelAttribute(value = "user") User user, Model model)	{
 		insertList(model);
 		return "register";
 	}
@@ -75,8 +81,13 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(@ModelAttribute(value="user") @Validated User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute){
+	public String update(@ModelAttribute(value="user") @Validated User user, 
+						BindingResult bindingResult, 
+						Model model, 
+						RedirectAttributes redirectAttribute){
+		
 		if(bindingResult.hasErrors()){
+			logger.info("==============hasError()===============" + bindingResult.getFieldError());
 			model.addAttribute("user", user);
 			insertList(model);
 			return "edit";

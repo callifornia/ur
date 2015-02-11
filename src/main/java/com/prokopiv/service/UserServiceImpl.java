@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
 import com.prokopiv.dao.UserDao;
 
@@ -24,8 +25,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getUserListBySearch(String login) {
-		return userDao.getUserListBySearch(login);
+	public List<User> getUserListBySearch(Search search) {
+		return userDao.getUserListBySearch(search);
 	}
 
 	@Override

@@ -3,15 +3,15 @@ package com.prokopiv.formvalidation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.prokopiv.bean.User;
 
+@Component
 public class UserFormValidation implements Validator {
-	
-	
 
 	@Override
 	public boolean supports(Class<?> clazz) {

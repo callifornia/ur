@@ -13,6 +13,66 @@ public class UserListTemp {
 	private static List<User> list = new ArrayList<User>();
 	private static final Logger logger = LogManager.getLogger(UserListTemp.class);
 	
+	
+	
+	
+	public List<User> getUserListBySearch(Search search){
+		List<User> list = new ArrayList<User>();
+		if(search.getSearchType() == null){
+			list = getUserByLogin(search.getSearchRow());
+		} else if("phone".equals(search.getSearchType())){
+			list = getUserByPhone(search.getSearchRow());
+		} else if ("lastName".equalsIgnoreCase(search.getSearchType())){
+			list = getUserByLastName(search.getSearchRow());
+		}
+		logger.info("===>  search type: " + search.getSearchType() + ", search row: " + search.getSearchRow() + ", result list(size): " + list.size());
+		return list;
+	}
+	
+	
+	public List<User> getUserByLastName(String lastName){
+		List<User> resultList = new ArrayList<User>();
+		for(User user : list){
+			if(user.getUserlastName().equalsIgnoreCase(lastName)){
+				resultList.add(user);
+			}
+		}
+		return resultList;
+	}
+	
+	
+	public List<User> getUserByPhone(String phone){
+		List<User> resultList = new ArrayList<User>();
+		for(User user : list){
+			if(phone.equalsIgnoreCase(user.getUserPhone())){
+				resultList.add(user);
+			}
+		}
+		return resultList;
+	}
+	
+	
+	
+	public List<User> getUserByLogin(String login){
+		List<User> resultList = new ArrayList<User>();
+		logger.info("login.isEmpty(): " + login.isEmpty() + ", login >= 1" + (login.length() >= 1 ));
+		if (!login.isEmpty()){
+			for(User elem : list){
+				if(elem.getUserLogin().equalsIgnoreCase(login)){
+					resultList.add(elem);
+				}
+			}
+		} else {
+			logger.info("here");
+			resultList = list;
+		}
+		return resultList;
+	}
+	
+	
+	
+	
+	
 	public User getUserById(String id) {
 		for (User user : list) {
 			if (user.getUserId().equals(id)) {
@@ -75,23 +135,6 @@ public class UserListTemp {
 
 	private List<User> makeUserList() {
 		for (int i = 1; i < 100; i++) {
-			if( i == 1){
-				User user = new User("" + i, "adminLogin_" + i,
-						"adminPassword_" + i, "ROLE_ADMIN",
-						"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
-						"userAdress_" + i, "Male", 
-						"Degree", "Master Degree");
-				list.add(user);
-			}
-			if( i == 2){
-				User user = new User("" + i, "adminLogin_" + i,
-						"adminPassword_" + i, "ROLE_PIUPIU",
-						"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",
-						"userAdress_" + i, "Male", 
-						"Degree", "Master Degree");
-				list.add(user);
-			}
-			
 			User user = new User("" + i, "adminLogin_" + i,
 					"adminPassword_" + i, "ROLE_REGULAR_USER",
 					"userLastName_" + i, "012345678" + i, "user" + i + "@gmail.com",

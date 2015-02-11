@@ -12,6 +12,7 @@
  		 $(function() {
     		$( "#datepicker" ).datepicker({
     			dateFormat: "dd-mm-yy"
+    			
     		});
   		});
   	</script>
@@ -110,7 +111,9 @@
 		</tr> 
 		<tr>
 			<td>
-				<p>User birthday (optional) <form:input id="datepicker" value = "${userBirthday}" path="userBirthday"/></p>
+				<p>User birthday (optional) <form:input id="datepicker" value = "${userBirthday}" path="userBirthday"/>
+					<form:errors path="userBirthday" />
+				</p>
 			</td>
 		</tr>		
 		<tr>

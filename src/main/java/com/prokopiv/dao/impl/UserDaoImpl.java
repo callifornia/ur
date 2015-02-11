@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
 import com.prokopiv.bean.UserListTemp;
 import com.prokopiv.dao.UserDao;
@@ -21,8 +22,8 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> getUserListBySearch(String login) {
-		return userListTemp.getUserList();
+	public List<User> getUserListBySearch(Search search) {
+		return userListTemp.getUserListBySearch(search);
 	}
 
 	@Override
