@@ -16,12 +16,12 @@
 
 <p>Login as: <sec:authentication property="name"/></p>
 
-	<a href="logout"> Logout </a><br>
-	<a href="search">Search page</a><br>
-	<a href="users">Show all users</a><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
+	<a href="${pageContext.request.contextPath}/users">Show all users</a><br>
 
 <sec:authorize access="hasRole('ROLE_ADMIN')">
-	<a href="register">Register page</a><br><br>
+	<a href="${pageContext.request.contextPath}/register">Register page</a><br><br>
 </sec:authorize>
 
 	<h1> USER MESSAGES PAGE </h1>
@@ -32,7 +32,7 @@
 	</c:if>
 	
 
-	<a href="message/new_message">New message</a><br><br>
+	<a href="${pageContext.request.contextPath}/message/new_message">New message</a><br><br>
 </body>
 
 </html>

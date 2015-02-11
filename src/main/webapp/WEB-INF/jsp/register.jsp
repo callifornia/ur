@@ -21,14 +21,14 @@
 <body>
 <h1>Register page</h1><br>
 	<p><sec:authentication property="name"/></p>
-	<a href="logout"> Logout </a><br>
-	<a href="search">Search page</a><br>
-	<a href="users">Users page</a><br><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
+	<a href="${pageContext.request.contextPath}/users">Users page</a><br><br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="message"> Show messages</a><br><br>
+		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
 	</sec:authorize><br><br>
 
-	<form:form action="insert" method="post" modelAttribute="user" >
+	<form:form action="${pageContext.request.contextPath}/insert" method="post" modelAttribute="user" >
 	<table>
 		<tr>
 			<td>
@@ -113,7 +113,7 @@
 		</tr>
 	</table>
 		<input type = "submit" value="Register user">
-		<a href="users"> Cancel </a>
+		<a href="${pageContext.request.contextPath}/users"> Cancel </a>
 	</form:form>
 
 </body>

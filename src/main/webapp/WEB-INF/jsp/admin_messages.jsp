@@ -10,9 +10,9 @@
 
 <p>Login as: <sec:authentication property="name"/></p>
 
-	<a href="logout"> Logout </a><br>
-	<a href="search">Search page</a><br>
-	<a href="users">Show all users</a><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
+	<a href="${pageContext.request.contextPath}/users">Show all users</a><br>
 
 <h1> ADMIN MESSAGES PAGE </h1>
 <h2>LIST OF MESSAGES(user from who this message and send date)</h2>

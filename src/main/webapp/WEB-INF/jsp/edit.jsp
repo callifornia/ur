@@ -26,7 +26,7 @@
 	<a href="${pageContext.request.contextPath}/search">Search page </a><br>
 	<a href="${pageContext.request.contextPath}/users">Users page </a><br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="../message"> Show messages</a><br><br>
+		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
 	</sec:authorize>
 	
 	<form:form action="${pageContext.request.contextPath}/update" method="post" modelAttribute="user" >

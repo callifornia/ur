@@ -17,7 +17,7 @@
 	<h2> MESSAGE FORM</h2>
 	<h2> TEXT and button send</h2><br><br>
 
-	<form action="send" method="post">
+	<form action="${pageContext.request.contextPath}/send" method="post">
 		<input type = "submit" value="Register user">
 		<a href="${pageContext.request.contextPath}/message"> Cancel </a>
 	</form>

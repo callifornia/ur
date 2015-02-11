@@ -18,12 +18,15 @@
 	<h1>Users page</h1>
 	<p> Login as: <sec:authentication property="name"/></p><br>
 	<c:if test="${not empty success}"> <p class = "message">${success}</p><br><br></c:if>
-	<a href="logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
 	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
-		<a href="message"> Send message</a><br><br>
+		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
 	</sec:authorize>
-	<a href="search"> Search page</a><br>
-	<a href="register">Register user</a><br><br>
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
+	</sec:authorize>
+	<a href="${pageContext.request.contextPath}/search"> Search page</a><br>
+	<a href="${pageContext.request.contextPath}/register">Register user</a><br><br>
 	
 	<table border = 1 align="center">
 		<tr style = "font-weight: bold; font-size: 22px;" align="center">
@@ -39,7 +42,7 @@
 		</tr>
 		<c:forEach var="user" items="${user}">
 		<tr>
-			<td><a href="user/${user.userId}">${user.userLogin}</a></td>
+			<td><a href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
 			<c:choose>
 				<c:when test="${user.userRole == 'ROLE_ADMIN' }">
 					<td>admin</td>
@@ -57,8 +60,8 @@
 			<td>${user.userEducation}</td>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			<td> 
-				<a href="edit/${user.userId}">Edit </a>
-				<a href="delete/${user.userId}">Delete </a>
+				<a href="${pageContext.request.contextPath}/edit/${user.userId}">Edit </a>
+				<a href="${pageContext.request.contextPath}/delete/${user.userId}">Delete </a>
 			</td>
 			</sec:authorize>
 		</tr>

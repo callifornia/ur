@@ -12,17 +12,15 @@
 	<h1>Search page</h1><br>
 	<p> Login as: <sec:authentication property="name" /> </p>
 	
-	<a href="logout"> Logout </a><br>
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" >
-		<a href="message"> Show messages</a><br><br>
+		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
 	</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
-		<a href="message"> Send message</a><br><br>
+		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
 	</sec:authorize>
 
-	<a href="users"> Show all users</a>
-	
-	<form:form name="searchForm" action="searchRequest" method = "POST" modelAttribute="search">
+	<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
 		<table>
 			<tr>
 				<td>Search: </td>

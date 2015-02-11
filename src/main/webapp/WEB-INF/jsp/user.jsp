@@ -16,9 +16,14 @@
 	<a href="${pageContext.request.contextPath}/logout">Logout</a><br>
 	<a href="${pageContext.request.contextPath}/search">Search page </a><br>
 	<a href="${pageContext.request.contextPath}/users">Users page </a><br>
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="../message"> Show messages</a><br><br>
+	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
+		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
 	</sec:authorize>
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
+	</sec:authorize>
+	
+	
 	<table>
 		<tr>
 			<td>
