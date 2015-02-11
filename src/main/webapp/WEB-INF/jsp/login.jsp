@@ -30,7 +30,10 @@
 			</tr>
 			<tr>
 				<td></td>
-				<td>Remember me: <input type = "checkbox" name = "remember-me"></td>
+				<td>
+					Remember me: <input type = "checkbox" name = "remember-me"><br>
+					<font><a href="${pageContext.request.contextPath}/register">Register</font>
+				</td>
 			</tr>
 			<tr>
 				<td>

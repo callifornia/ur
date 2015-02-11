@@ -21,6 +21,7 @@
 	</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
+		<a href="${pageContext.request.contextPath}/edit/${user.userId}"> Edit</a><br><br>
 	</sec:authorize>
 	
 	

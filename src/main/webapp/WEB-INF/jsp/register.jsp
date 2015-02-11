@@ -20,10 +20,13 @@
 </head>
 <body>
 <h1>Register page</h1><br>
+
+<sec:authorize access="hasRole({'ROLE_ADMIN','ROLE_REGULAR_USER'})">
 	<p><sec:authentication property="name"/></p>
 	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
 	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
 	<a href="${pageContext.request.contextPath}/users">Users page</a><br><br>
+</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
 	</sec:authorize><br><br>
@@ -44,10 +47,12 @@
 		</tr>
 		<tr>
 			<td>
-				<p>User Role  
-					<form:radiobuttons path="userRole" items="${roles}"/>
-					<form:errors path="userRole" /></p>
-				</p>
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<p>
+						User Role <form:radiobuttons path="userRole" items="${roles}"/>
+						<form:errors path="userRole" />
+					</p>
+				</sec:authorize>					
 			</td>
 		</tr>
 		<tr>

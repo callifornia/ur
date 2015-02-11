@@ -24,9 +24,9 @@
 	</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
+		<a href="${pageContext.request.contextPath}/register">Register user</a><br><br>
 	</sec:authorize>
 	<a href="${pageContext.request.contextPath}/search"> Search page</a><br>
-	<a href="${pageContext.request.contextPath}/register">Register user</a><br><br>
 	
 	<table border = 1 align="center">
 		<tr style = "font-weight: bold; font-size: 22px;" align="center">
