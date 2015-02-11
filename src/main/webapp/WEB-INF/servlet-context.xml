@@ -16,15 +16,20 @@
 	<resources mapping="/resources/**" location="/resources/" />
 
 
-	<beans:bean scope="singleton" id="userListTemp" class="com.prokopiv.bean.UserListTemp" init-method="makeUserList" />
+	<beans:bean scope="singleton" id="userListTemp" class="com.prokopiv.dao.UserListTemp" init-method="makeUserList" />
 	
+	<!-- Form validatior and user/search bean  -->
 	<beans:bean id = "user" class = "com.prokopiv.bean.User" />
+	<beans:bean id = "search" class = "com.prokopiv.bean.Search"></beans:bean>
 	<beans:bean id="userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
+	<beans:bean id = "searchFormValidator" class = "com.prokopiv.formvalidation.SearchFormValidator" />
 	
+	<!-- for messages -->
 	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <beans:property name="basename" value="messages" />
     </beans:bean>
     
+    <!-- row back in browser -->
 	<interceptors>
 		<beans:bean id="webContentInterceptor"
 			class="org.springframework.web.servlet.mvc.WebContentInterceptor">
@@ -34,7 +39,8 @@
 			<beans:property name="useCacheControlNoStore" value="true" />
 		</beans:bean>	
 	</interceptors>
-
+	
+	<!-- for find jsp pages -->
 	<beans:bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/jsp/" />

@@ -1,4 +1,4 @@
-package com.prokopiv.dao.impl;
+package com.prokopiv.dao;
 
 import java.util.List;
 
@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
-import com.prokopiv.bean.UserListTemp;
-import com.prokopiv.dao.UserDao;
 
 @Repository
 public class UserDaoImpl implements UserDao {

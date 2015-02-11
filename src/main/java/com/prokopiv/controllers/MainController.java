@@ -10,7 +10,6 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +44,14 @@ public class MainController {
 	@Autowired
 	SearchFormValidator searchValidator;
 	
+	@Autowired
+	Search search;
+	
+	@InitBinder(value = "search")
+	private void initSearchBinder(WebDataBinder dataBinder){
+		dataBinder.setValidator(searchValidator);
+	}
+	
 	@InitBinder(value = "user")
 	private void initUserBinder(WebDataBinder dataBinder){
 		logger.info(" ======================> date and userValidate");
@@ -56,7 +63,7 @@ public class MainController {
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )
 	public String search(Model model){
-		model.addAttribute("search", searchValidator);
+		model.addAttribute("search", search);
 		logger.info("/SEARCH PAGE. SHOW SEARCH FORM");
 		return "search";
 	}
@@ -112,15 +119,25 @@ public class MainController {
 		}
 	}
 	
+	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST)
+	public String userSearch(Model model, @ModelAttribute(value = "search") Search search, RedirectAttributes redirectAttribute){
+		redirectAttribute.addFlashAttribute("user", userService.getUserListBySearch(search) );
+//		redirectAttribute.addAttribute("user", userService.getUserListBySearch(search));
+		return "redirect:/users";
+	}
 	
 	@RequestMapping(value = "/users")
 	public String users(Model model)	{
-		logger.info("SHOW USERS JSP WITH ALL USERS");
+		logger.info("Show users page by search type");
 		if(model.containsAttribute("success")){
 			logger.info("has key: " + model.asMap().get("success"));
 		} else {
 			logger.info("dont have a key success");
 		}
+		
+		if(model.containsAttribute("user")){
+			return "users";
+		} 
 		model.addAttribute("user", userService.getUserList());
 		return "users";
 	}

@@ -22,7 +22,7 @@
 
 	<a href="users"> Show all users</a>
 	
-	<%-- <form:form name="searchForm" action="users" method = "POST" modelAttribute="search">
+	<form:form name="searchForm" action="searchRequest" method = "POST" modelAttribute="search">
 		<table>
 			<tr>
 				<td>Search: </td>
@@ -35,6 +35,7 @@
 			</tr>
 			<tr>
 				<td>
+					<form:radiobutton path="searchType" value="login" />login<br>
 					<form:radiobutton path="searchType" value="phone"/> phone <br>
 					<form:radiobutton path="searchType" value="lastName" />lastName<br>
 					
@@ -48,6 +49,6 @@
 				</td>
 			</tr>						
 		</table>
-	</form:form> --%>
+	</form:form>
 </body>
 </html>

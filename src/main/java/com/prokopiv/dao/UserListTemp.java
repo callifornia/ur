@@ -1,4 +1,4 @@
-package com.prokopiv.bean;
+package com.prokopiv.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,13 +8,13 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.validation.Validator;
 
+import com.prokopiv.bean.Search;
+import com.prokopiv.bean.User;
+
 public class UserListTemp {
 
 	private static List<User> list = new ArrayList<User>();
 	private static final Logger logger = LogManager.getLogger(UserListTemp.class);
-	
-	
-	
 	
 	public List<User> getUserListBySearch(Search search){
 		List<User> list = new ArrayList<User>();
@@ -24,11 +24,12 @@ public class UserListTemp {
 			list = getUserByPhone(search.getSearchRow());
 		} else if ("lastName".equalsIgnoreCase(search.getSearchType())){
 			list = getUserByLastName(search.getSearchRow());
+		} else if ("login".equalsIgnoreCase(search.getSearchType())){
+			list = getUserByLogin(search.getSearchRow());
 		}
 		logger.info("===>  search type: " + search.getSearchType() + ", search row: " + search.getSearchRow() + ", result list(size): " + list.size());
 		return list;
 	}
-	
 	
 	public List<User> getUserByLastName(String lastName){
 		List<User> resultList = new ArrayList<User>();
@@ -40,7 +41,6 @@ public class UserListTemp {
 		return resultList;
 	}
 	
-	
 	public List<User> getUserByPhone(String phone){
 		List<User> resultList = new ArrayList<User>();
 		for(User user : list){
@@ -50,8 +50,6 @@ public class UserListTemp {
 		}
 		return resultList;
 	}
-	
-	
 	
 	public List<User> getUserByLogin(String login){
 		List<User> resultList = new ArrayList<User>();
@@ -68,10 +66,6 @@ public class UserListTemp {
 		}
 		return resultList;
 	}
-	
-	
-	
-	
 	
 	public User getUserById(String id) {
 		for (User user : list) {
