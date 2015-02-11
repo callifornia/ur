@@ -39,7 +39,7 @@
 		</tr>
 		<c:forEach var="user" items="${user}">
 		<tr>
-			<td>${user.userLogin}</td>
+			<td><a href="user/${user.userId}">${user.userLogin}</a></td>
 			<c:choose>
 				<c:when test="${user.userRole == 'ROLE_ADMIN' }">
 					<td>admin</td>

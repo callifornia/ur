@@ -61,6 +61,13 @@ public class MainController {
 		dataBinder.registerCustomEditor(Date.class, custom);
 	}
 	
+	@RequestMapping(value = "/user/{id}")
+	public String user(@PathVariable(value = "id") String id,  Model model){
+		model.addAttribute("user", userService.getUserById(id));
+		return "user";
+	}
+	
+	
 	@RequestMapping(value = "/search", method = RequestMethod.GET )
 	public String search(Model model){
 		model.addAttribute("search", search);
@@ -122,7 +129,6 @@ public class MainController {
 	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST)
 	public String userSearch(Model model, @ModelAttribute(value = "search") Search search, RedirectAttributes redirectAttribute){
 		redirectAttribute.addFlashAttribute("user", userService.getUserListBySearch(search) );
-//		redirectAttribute.addAttribute("user", userService.getUserListBySearch(search));
 		return "redirect:/users";
 	}
 	
