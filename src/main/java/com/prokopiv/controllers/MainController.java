@@ -77,17 +77,21 @@ public class MainController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(@ModelAttribute(value = "user") User user, Model model)	{
+		logger.info("==> register user method");
 		insertList(model);
 		return "register";
 	}
 	
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public String insert(@Validated User user,BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute)	{
+		logger.info("==> insert user method");
 		if(bindingResult.hasErrors()){
+			logger.info("has errors" + bindingResult.getFieldError());
 			insertList(model);
 			model.addAttribute("user", user);
 			return "register";
 		} else {
+			logger.info("dont have errors");
 			redirectAttribute.addFlashAttribute("success", "Succesful user registered");
 			userService.insertUser(user);
 			return "redirect:/users";

@@ -20,11 +20,11 @@
 		 <security:intercept-url pattern="/login" access="permitAll" />
 		 <security:intercept-url pattern="/loginError" access="permitAll" />
 		 <security:intercept-url pattern="/register" access="permitAll" />
+		 <security:intercept-url pattern="/insert" access="permitAll" />
 		 
 		 <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_REGULAR_USER')" />
 
 		 <security:intercept-url pattern="/edit**" access="hasRole('ROLE_ADMIN')" />
-		 <security:intercept-url pattern="/insert" access="hasRole('ROLE_ADMIN')" />
 		 <security:intercept-url pattern="/update" access="hasRole('ROLE_ADMIN')" />
 		 
 		 <security:form-login login-page="/login" 
