@@ -3,19 +3,21 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+	 <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:dbconfig.properties</value>
+        </property>
+    </bean>
 	<bean id="dataSource"	class="org.springframework.jdbc.datasource.DriverManagerDataSource">	
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/dbusers" />
-		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="driverClassName" value= "${driverClassName}" />
+		<property name="url" value = "${url}" />
+		<property name="username" value = "${username}" />
+		<property name="password" value = "${password}" />
 	</bean>
-
 	
 	 <security:global-method-security secured-annotations="enabled" />
 	 <security:http auto-config="true" use-expressions="true">
-		 <security:access-denied-handler error-page="/403"/>
-		
+		 <security:access-denied-handler error-page="/403"/>		
 		 <security:intercept-url pattern="/" access="permitAll" />
 		 <security:intercept-url pattern="/login" access="permitAll" />
 		 <security:intercept-url pattern="/loginError" access="permitAll" />
@@ -40,23 +42,22 @@
 								remember-me-parameter="remember-me" />		
 	</security:http>
 	
-	<security:authentication-manager>
+	<!-- <security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
 				<security:user name="user" password="user" authorities="ROLE_REGULAR_USER"/>
 			</security:user-service>		
 		</security:authentication-provider>
-	</security:authentication-manager>
+	</security:authentication-manager> -->
 
-	<!-- <security:authentication-manager>	
+	<security:authentication-manager>	
 		<security:authentication-provider >
 		<security:password-encoder hash="md5" />
 			<security:jdbc-user-service
 				data-source-ref="dataSource"
-				users-by-username-query="select user_name,password,enabled from user_authentication where user_name=?"
-				authorities-by-username-query="select u1.user_name, u2.user_role from user_authentication u1, user_authorization u2 where u1.user_id = u2.user_id and u1.user_name =?" />
+				users-by-username-query="SELECT user_name, user_password, user_enable FROM user_authentication WHERE user_name = ?"
+				authorities-by-username-query="SELECT uat.user_name, ur.role_name FROM user_authentication as uat, user_role as ur, user_authorization as uaz WHERE uat.USER_ID = uaz.USER_ID AND ur.ROLE_ID = uaz.ROLE_ID AND uat.USER_NAME = ?" />
 		</security:authentication-provider>
-	</security:authentication-manager> -->
-
+	</security:authentication-manager>
 </beans>

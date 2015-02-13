@@ -1,6 +1,12 @@
 package com.prokopiv.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,9 +19,33 @@ public class UserDaoImpl implements UserDao {
 	
 	@Autowired
 	UserListTemp userListTemp;
+	
+	@Autowired
+	DataSource dataSource;
+	
+	@Autowired
+	User user;
+	
+	
 
 	@Override
 	public User getUserById(String id) {
+//		String sql = "SELECT * FROM users WHERE userid = ?";
+//		PreparedStatement pr = null;
+//		ResultSet rs = null;
+//		try {
+//			Connection conn = dataSource.getConnection();
+//			pr = conn.prepareStatement(sql);
+//			pr.setString(1, id);
+//			rs = pr.executeQuery();
+//			while(rs.next()){
+//				user.setUserId(rs.getString("userid"));
+//				user.setUserLogin(rs.getString("login"));
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return userListTemp.getUserById(id);
 	}
 

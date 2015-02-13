@@ -20,14 +20,16 @@
 	
 	<!-- Form validatior and user/search bean  -->
 	<beans:bean id = "user" class = "com.prokopiv.bean.User" />
-	<beans:bean id = "search" class = "com.prokopiv.bean.Search"></beans:bean>
-	<beans:bean id="userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
+	<beans:bean id = "search" class = "com.prokopiv.bean.Search" />
+	<beans:bean id = "userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
 	<beans:bean id = "searchFormValidator" class = "com.prokopiv.formvalidation.SearchFormValidator" />
 	
 	<!-- for messages -->
 	<beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <beans:property name="basename" value="messages" />
-    </beans:bean>
+    </beans:bean> 
+    
+   
     
     <!-- row back in browser -->
 	<interceptors>
