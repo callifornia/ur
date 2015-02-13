@@ -1,12 +1,11 @@
 package com.prokopiv.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.validation.Validator;
 
 import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
@@ -81,8 +80,16 @@ public class UserListTemp {
 	}
 
 	public boolean inserUser(User user) {
-		user.setUserId("00");
-		list.add(user);
+		logger.info("UserListTemplate insert method: " + user.toString());
+		int lastIndex = list.size() - 1;
+		String idStr = list.get(lastIndex).getUserId();
+		Integer idInt = Integer.valueOf(idStr) + 1;
+		User userInsert = new User(idInt + "", user.getUserLogin(),
+				user.getUserPassword(),user.getUserRole(),
+				user.getUserlastName(), user.getUserPhone(),user.getUserMail(),
+				user.getUserAdress(), user.getUserGender(), 
+				user.getUserEducation(), user.getUserDescription());
+		list.add(userInsert);		
 		return true;
 	}
 

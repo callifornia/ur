@@ -3,6 +3,11 @@ package com.prokopiv.formvalidation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -11,6 +16,8 @@ import com.prokopiv.bean.User;
 
 
 public class UserFormValidation implements Validator {
+	
+	private static final Logger logger = LogManager.getLogger(UserFormValidation.class);
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -19,10 +26,16 @@ public class UserFormValidation implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
+		User user = (User) target;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if((auth instanceof AnonymousAuthenticationToken)){
+			user.setUserRole("ROLE_REGULAR_USER");
+		} 
+		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
-		User user = (User) target;
 		if (user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40) {
 			errors.rejectValue("userLogin", "user.err.login");
 		}

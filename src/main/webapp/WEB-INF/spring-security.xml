@@ -21,6 +21,7 @@
 		 <security:intercept-url pattern="/loginError" access="permitAll" />
 		 <security:intercept-url pattern="/register" access="permitAll" />
 		 <security:intercept-url pattern="/insert" access="permitAll" />
+		 <security:intercept-url pattern="/resources/**" access="permitAll" />
 		 
 		 <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_REGULAR_USER')" />
 

@@ -33,9 +33,9 @@
 			</tr>
 			<tr>
 				<td>
-					<form:radiobutton path="searchType" value="login" />login<br>
-					<form:radiobutton path="searchType" value="phone"/> phone <br>
-					<form:radiobutton path="searchType" value="lastName" />lastName<br>
+					<form:radiobutton path="searchType" value="login" checked = "checked"  />login<br>
+					<form:radiobutton path="searchType" value="phone"/>phone <br>
+					<form:radiobutton path="searchType" value="lastName" />last Name<br>
 					
 				</td>
 			

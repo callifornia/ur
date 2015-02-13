@@ -173,6 +173,7 @@ public class MainController {
 		List<String> userEducation = new ArrayList<String>();
 		userEducation.add("Degree");
 		userEducation.add("Master Degree");
+		userEducation.add("Other");
 		
 		model.addAttribute("roles", userRole);
 		model.addAttribute("genders", userGender);

@@ -21,7 +21,7 @@
 <body>
 <h1>Register page</h1><br>
 
-<sec:authorize access="hasRole({'ROLE_ADMIN','ROLE_REGULAR_USER'})">
+<sec:authorize access="hasAnyRole({'ROLE_ADMIN','ROLE_REGULAR_USER'})">
 	<p><sec:authentication property="name"/></p>
 	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
 	<a href="${pageContext.request.contextPath}/search">Search page</a><br>
@@ -45,16 +45,16 @@
 				<form:errors path="userPassword" /></p>
 			</td>
 		</tr>
-		<tr>
-			<td>
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
+	    <sec:authorize access="hasRole('ROLE_ADMIN')">
+			<tr>
+				<td>
 					<p>
 						User Role <form:radiobuttons path="userRole" items="${roles}"/>
 						<form:errors path="userRole" />
 					</p>
-				</sec:authorize>					
-			</td>
-		</tr>
+				</td>
+			</tr>
+		</sec:authorize>					
 		<tr>
 			<td>
 				<p>User last name <form:input path="userlastName"/>
@@ -85,8 +85,8 @@
 		<tr>
 			<td>
 				<p>User gender <form:select path="userGender" > 
-									<form:options items="${genders}"/>
 									<form:option value=""></form:option>
+									<form:options items="${genders}"/>
 							   </form:select> 
 							   <form:errors path="userGender" />
 				</p>
@@ -102,6 +102,7 @@
 			<td>
 				<p>User education 
 					<form:select path="userEducation">
+						<form:option value=""></form:option>
 						<form:options items="${education}"/>
 					</form:select>
 					<form:errors path="userEducation" />
