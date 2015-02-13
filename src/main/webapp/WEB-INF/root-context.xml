@@ -13,7 +13,6 @@
             
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-
 	<mvc:interceptors>
 		<bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
 			<property name="cacheSeconds" value="0" />
@@ -54,5 +53,4 @@
 	<bean id = "userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
 	<bean id = "searchFormValidator" class = "com.prokopiv.formvalidation.SearchFormValidator" />
 	<bean scope="singleton" id="userListTemp" class="com.prokopiv.dao.UserListTemp" init-method="makeUserList" />
-
 </beans>
