@@ -33,8 +33,7 @@
 		 <security:remember-me key="uniqueAndSecret" 
 								token-validity-seconds="86400"
 								remember-me-parameter="remember-me" />		
-	</security:http>
-	
+	</security:http>	
 	<!-- <security:authentication-manager>	
 		<security:authentication-provider >
 		<security:password-encoder hash="md5" />
