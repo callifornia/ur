@@ -35,7 +35,7 @@
 								token-validity-seconds="86400"
 								remember-me-parameter="remember-me" />		
 	</security:http>
-	<security:authentication-manager>	
+	<!-- <security:authentication-manager>	
 		<security:authentication-provider >
 		<security:password-encoder hash="md5" />
 			<security:jdbc-user-service
@@ -43,13 +43,13 @@
 				users-by-username-query="${users.security.username}"
 				authorities-by-username-query="${users.security.authentication}" />
 		</security:authentication-provider>
-	</security:authentication-manager>
-	<!-- <security:authentication-manager>
+	</security:authentication-manager> -->
+	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
 				<security:user name="user" password="user" authorities="ROLE_REGULAR_USER"/>
 			</security:user-service>		
 		</security:authentication-provider>
-	</security:authentication-manager> -->
+	</security:authentication-manager>
 </beans>
