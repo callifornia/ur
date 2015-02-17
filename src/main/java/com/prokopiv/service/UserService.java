@@ -7,6 +7,7 @@ import com.prokopiv.bean.User;
 
 public interface UserService {
 	
+	public boolean getUserByLogin(String login);
 	public User getUserById(String id);
 	public List<User> getUserListBySearch(Search search);
 	public List<User> getUserList();

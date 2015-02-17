@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,12 +14,16 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.prokopiv.bean.User;
+import com.prokopiv.service.UserService;
 
 
 public class UserFormValidation implements Validator {
 	
 	private static final Logger logger = LogManager.getLogger(UserFormValidation.class);
 
+	@Autowired
+	UserService userService;
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return User.class.equals(clazz);
@@ -36,8 +41,15 @@ public class UserFormValidation implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
-		if (user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40) {
+		String login = user.getUserLogin();
+		logger.info("login: " + login);
+		if (login.length() < 4 || login.length() > 40) {
 			errors.rejectValue("userLogin", "user.err.login");
+		}
+		if(userService.getUserByLogin(login)){
+			logger.info("Validator: check userLogin. true");
+		} else {
+			logger.info("Validator: check userLogin. false");
 		}
 		if (user.getUserPassword().length() < 6	|| user.getUserPassword().length() > 40) {
 			errors.rejectValue("userPassword", "user.err.password");
@@ -81,4 +93,6 @@ public class UserFormValidation implements Validator {
 		}  
 		return isValid;  
 	}
+	
+	
 }

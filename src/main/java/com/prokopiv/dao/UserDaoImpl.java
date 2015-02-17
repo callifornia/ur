@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +18,8 @@ import com.prokopiv.bean.User;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+	
+	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 	
 	@Autowired
 	UserListTemp userListTemp;
@@ -26,7 +30,26 @@ public class UserDaoImpl implements UserDao {
 	@Autowired
 	User user;
 	
-	
+	@Override
+	public boolean getUserByLogin(String login) {
+		boolean result = true;
+		String sql = "SELECT 1 FROM user_authentication WHERE user_name = ?";
+		PreparedStatement pr = null;
+		ResultSet rs = null;
+		Connection connection = null;
+		try{
+			connection = dataSource.getConnection();
+			pr = connection.prepareStatement(sql);
+			pr.setString(1, login);
+			rs = pr.executeQuery();
+			while(rs.next()){
+				logger.info("rs: " + rs + ", rs.getRow(): " + rs.getRow());
+			}
+		} catch (SQLException e){
+
+		}				
+		return result;
+	}
 
 	@Override
 	public User getUserById(String id) {

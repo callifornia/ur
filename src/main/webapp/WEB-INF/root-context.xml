@@ -47,10 +47,10 @@
 		<property name="username" value = "${username}" />
 		<property name="password" value = "${password}" />
 	</bean>
-
-	<bean id = "user" class = "com.prokopiv.bean.User" />
-	<bean id = "search" class = "com.prokopiv.bean.Search" />
-	<bean id = "userFormValidator" class="com.prokopiv.formvalidation.UserFormValidation" />
-	<bean id = "searchFormValidator" class = "com.prokopiv.formvalidation.SearchFormValidator" />
-	<bean scope="singleton" id="userListTemp" class="com.prokopiv.dao.UserListTemp" init-method="makeUserList" />
+	
+	<bean class = "com.prokopiv.bean.User" />
+	<bean class = "com.prokopiv.bean.Search" />
+	<bean class = "com.prokopiv.formvalidation.SearchFormValidator" />
+	<bean scope="singleton" class="com.prokopiv.dao.UserListTemp" init-method="makeUserList" />
+	<bean class="com.prokopiv.formvalidation.UserFormValidation" />
 </beans>

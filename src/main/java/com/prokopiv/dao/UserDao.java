@@ -6,7 +6,8 @@ import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
 
 public interface UserDao {
-
+	
+	public boolean getUserByLogin(String login);
 	public User getUserById(String id);
 	public List<User> getUserListBySearch(Search search);
 	public List<User> getUserList();
