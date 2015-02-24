@@ -19,13 +19,9 @@
 
 </head>
 <body>
-<h1>ADD NEW USER FROM ADMIN</h1><br>
+<h1>REGISTRED FROM LOGIN PAGE</h1><br>
 
-	<p><sec:authentication property="name"/></p>
-	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
-	<a href="${pageContext.request.contextPath}/users/1">Users page</a><br>
-
-	<form:form action="${pageContext.request.contextPath}/insert" method="post" modelAttribute="user" >
+	<form:form action="${pageContext.request.contextPath}/inserted" method="post" modelAttribute="user" >
 	<table>
 		<tr>
 			<td>
@@ -113,7 +109,7 @@
 		</tr>
 	</table>
 		<input type = "submit" value="Register user">
-		<a href="${pageContext.request.contextPath}/users/1"> Cancel </a>
+		<a href="${pageContext.request.contextPath}/users"> Cancel </a>
 	</form:form>
 
 </body>

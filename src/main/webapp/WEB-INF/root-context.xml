@@ -22,6 +22,9 @@
 		</bean>	
 	</mvc:interceptors>
 
+	<bean class = "com.prokopiv.bean.User" />
+	<bean class = "com.prokopiv.bean.Search" />
+
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
@@ -48,9 +51,9 @@
 		<property name="password" value = "${password}" />
 	</bean>
 	
-	<bean class = "com.prokopiv.bean.User" />
-	<bean class = "com.prokopiv.bean.Search" />
+	<bean class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<bean class = "com.prokopiv.formvalidation.Pagination" />
+	
 	<bean class = "com.prokopiv.formvalidation.SearchFormValidator" />
-	<bean scope="singleton" class="com.prokopiv.dao.UserListTemp" init-method="makeUserList" />
-	<bean class="com.prokopiv.formvalidation.UserFormValidation" />
+	
 </beans>

@@ -10,7 +10,14 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prokopiv.bean.Search;
 import com.prokopiv.bean.User;
+import com.prokopiv.formvalidation.Pagination;
 import com.prokopiv.formvalidation.SearchFormValidator;
 import com.prokopiv.formvalidation.UserFormValidation;
 import com.prokopiv.service.UserService;
@@ -33,20 +41,16 @@ import com.prokopiv.service.UserService;
 @Controller
 public class MainController {
 
+	@Autowired UserService userService;
+	@Autowired Search search;
+	@Autowired UserFormValidation userFormValidation;
+	@Autowired SearchFormValidator searchValidator;
+	@Autowired Pagination pagination;
+	@Autowired @Qualifier("authMgr") private AuthenticationManager authMgr;
+	@Autowired private UserDetailsService userDetailsSvc;
+	
 	private static Logger logger = LogManager.getLogger(LoginController.class);
 
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	UserFormValidation userFormValidation;
-	
-	@Autowired
-	SearchFormValidator searchValidator;
-	
-	@Autowired
-	Search search;
-	
 	@InitBinder(value = "search")
 	private void initSearchBinder(WebDataBinder dataBinder){
 		dataBinder.setValidator(searchValidator);
@@ -54,12 +58,18 @@ public class MainController {
 	
 	@InitBinder(value = "user")
 	private void initUserBinder(WebDataBinder dataBinder){
-		logger.info(" ======================> date and userValidate");
 		dataBinder.setValidator(userFormValidation);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		CustomDateEditor custom = new CustomDateEditor(dateFormat, true);
 		dataBinder.registerCustomEditor(Date.class, custom);
 	}
+	
+	@RequestMapping(value = "/initializeTables", method = RequestMethod.GET)
+	public String initializeTables(Model model){
+		userService.initializationDataBase();
+		return "redirect:/login";
+	}
+	
 	
 	@RequestMapping(value = "/user/{id}")
 	public String user(@PathVariable(value = "id") String id,  Model model){
@@ -67,34 +77,62 @@ public class MainController {
 		return "user";
 	}
 	
-	
-	@RequestMapping(value = "/search", method = RequestMethod.GET )
-	public String search(Model model){
-		model.addAttribute("search", search);
-		logger.info("/SEARCH PAGE. SHOW SEARCH FORM");
-		return "search";
+	@RequestMapping(value = "/recovery/{id}", method = RequestMethod.GET)
+	public String recovery(@PathVariable(value  = "id") String id, Model model, RedirectAttributes redirectAttribute){
+		if (userService.recoveryUser(id)){
+			redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
+		} else {
+			redirectAttribute.addFlashAttribute("success", "Не получилось");
+		}
+		return "redirect:/users/1";
 	}
-
+	
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(@ModelAttribute(value = "user") User user, Model model)	{
-		logger.info("==> register user method");
 		insertList(model);
 		return "register";
 	}
 	
+	@RequestMapping(value = "/registered", method = RequestMethod.GET)
+	public String registerAnonimus(@ModelAttribute(value = "user") User user, Model model)	{
+		insertList(model);
+		return "registered";
+	}
+	
+	@RequestMapping(value = "/inserted", method = RequestMethod.POST)
+	public String insertAnonimus(@Validated User user,BindingResult bindingResult, Model model)	{
+		if(bindingResult.hasErrors()){
+			insertList(model);
+			model.addAttribute("user", user);
+			return "registered";
+		} else {
+			userService.insertUser(user);
+			try {
+				UserDetails userDetail = userDetailsSvc.loadUserByUsername(user.getUserLogin());
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetail, user.getUserPassword(), userDetail.getAuthorities());
+				authMgr.authenticate(auth);
+				if(auth.isAuthenticated()){
+					SecurityContextHolder.getContext().setAuthentication(auth);
+					return "redirect:/users/1";
+				}
+			} catch(Exception e){
+				logger.info("beeeeeeeeeeeeeeeeeeee");
+			}
+			logger.info("redirect to ligon page");
+			return "redirect:/login";
+		}
+	}
+	
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public String insert(@Validated User user,BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute)	{
-		logger.info("==> insert user method");
 		if(bindingResult.hasErrors()){
-			logger.info("has errors" + bindingResult.getFieldError());
 			insertList(model);
 			model.addAttribute("user", user);
 			return "register";
 		} else {
-			logger.info("dont have errors");
 			redirectAttribute.addFlashAttribute("success", "Succesful user registered");
 			userService.insertUser(user);
-			return "redirect:/users";
+			return "redirect:/users/1";
 		}
 	}
 	
@@ -105,15 +143,13 @@ public class MainController {
 						RedirectAttributes redirectAttribute){
 		
 		if(bindingResult.hasErrors()){
-			logger.info("==============hasError()===============" + bindingResult.getFieldError());
 			model.addAttribute("user", user);
 			insertList(model);
 			return "edit";
 		} else {
 			userService.updateUser(user);
-			logger.info("UPDATE USER IN DATA BASE. (add model attribute. add success)");
 			redirectAttribute.addFlashAttribute("success", "Succesful user update");
-			return "redirect:users";
+			return "redirect:users/1";
 		}
 	}
 
@@ -123,7 +159,6 @@ public class MainController {
 		if(model.containsAttribute("user")){
 			return "edit";
 		} else{
-			logger.info("/edit/{id}: " + id);
 			User user = userService.getUserById(id);
 			model.addAttribute("user", user);
 			return "edit";
@@ -132,33 +167,45 @@ public class MainController {
 	
 	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST)
 	public String userSearch(Model model, @ModelAttribute(value = "search") Search search, RedirectAttributes redirectAttribute){
-		redirectAttribute.addFlashAttribute("user", userService.getUserListBySearch(search) );
-		return "redirect:/users";
+		redirectAttribute.addFlashAttribute("user", userService.getUserBySearch(search, pagination));
+		return "redirect:/users/1";
 	}
+	
+	@RequestMapping (value = "/users/{page}", method = RequestMethod.GET)
+	public String usersPage(@PathVariable (value = "page") Integer page, Model model){
+		pagination.setCurrentPage(page);
+		model.addAttribute("pagi", pagination);
+		model.addAttribute("search", search);
+		
+		if(model.containsAttribute("user")){
+			return "users";
+		}
+		
+		model.addAttribute("user", userService.getUserList(pagination));
+		return "users";
+	}
+	
 	
 	@RequestMapping(value = "/users")
 	public String users(Model model)	{
-		logger.info("Show users page by search type");
 		if(model.containsAttribute("success")){
 			logger.info("has key: " + model.asMap().get("success"));
 		} else {
 			logger.info("dont have a key success");
 		}
-		
 		if(model.containsAttribute("user")){
 			return "users";
-		} 
-		model.addAttribute("user", userService.getUserList());
+		}
+		model.addAttribute("user", userService.getUserList(pagination));
 		return "users";
 	}
 		
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
-		redirectAttribute.addFlashAttribute("success", "Succesful user delete");
-		logger.info("DELETE USER. (add modell attribute(add success) id() => )" + id);
+		redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
 		userService.deleteUser(id);
-		return "redirect:/users";
+		return "redirect:/users/1";
 	}
 	
 	private void insertList(Model model){

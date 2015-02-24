@@ -13,12 +13,6 @@
 	<p> Login as: <sec:authentication property="name" /> </p>
 	
 	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
-	<sec:authorize access="hasRole('ROLE_ADMIN')" >
-		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
-	</sec:authorize>
-	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
-		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
-	</sec:authorize>
 
 	<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
 		<table>
@@ -33,7 +27,8 @@
 			</tr>
 			<tr>
 				<td>
-					<form:radiobutton path="searchType" value="login" checked = "checked"  />login<br>
+					<form:radiobutton path="searchType" value="all" checked = "checked" />all users<br>
+					<form:radiobutton path="searchType" value="login" />login<br>
 					<form:radiobutton path="searchType" value="phone"/>phone <br>
 					<form:radiobutton path="searchType" value="lastName" />last Name<br>
 					

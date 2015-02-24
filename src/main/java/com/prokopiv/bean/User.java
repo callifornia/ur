@@ -16,6 +16,7 @@ public class User {
 	private Date userBirthday;
 	private String userEducation;
 	private String userDescription;
+	private boolean userEnable;
 	
 	public User() {}
 	
@@ -37,6 +38,14 @@ public class User {
 		this.userDescription = userDescription;
 	}
 	
+	public boolean isUserEnable() {
+		return userEnable;
+	}
+
+	public void setUserEnable(boolean userEnable) {
+		this.userEnable = userEnable;
+	}
+
 	public String getUserId() {
 		return userId;
 	}

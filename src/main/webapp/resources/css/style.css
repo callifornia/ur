@@ -1,0 +1,156 @@
+body{
+	background-color: #f4f4f4;
+}
+#header{
+	border-bottom: 1px solid black;
+	background-color: #3a5795;
+	color: white;
+}
+#input-login{
+	width: 125px;
+	margin-right: 10px;
+	-webkit-border-radius: 0px;
+	height: 17px;
+}
+#input-password{
+	width: 125px;
+	margin-right: 10px;
+	-webkit-border-radius: 0px;
+	height: 17px;
+}
+#input-login-button{
+	margin-bottom: 12px;
+	height: 26px;
+	margin-left: 15px;
+	-webkit-border-radius: 0px;
+
+}
+
+
+#main-conteiner{
+	margin-top: 30px;
+}
+.main-registration-text{
+	font-size: 36px;
+	color: #3a5795;
+	margin-bottom: 35px;
+}
+#main-registration-login {
+	width: 170px;
+	margin-right: 5px;
+	height: 25px;
+
+}
+#main-pic{
+	margin-top: 50px;
+}
+#main-registration-password{
+	width: 170px;	
+	height: 25px;
+}
+#main-registration-fio{
+	width: 364px;
+	height: 25px;
+}
+#main-registration-phone{
+	width: 170px;
+	height: 25px;
+	margin-right: 5px;
+}
+#main-registration-birthday{
+	width: 170px;
+	height: 25px;
+}
+#main-registration-gender-male{
+	float: left;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+.main-registration-gender-text{
+	margin-top: 5px;
+	font-size: 18px;
+	color: #616161;
+}
+.main-registration-education-text{
+	margin-top: 17px;
+	font-size: 18px;
+	color: #616161;
+}
+#main-registration-education-hight{
+	float: left;
+	margin-left: 50px;
+	margin-right: 35px;
+}
+#main-registration-education-degree{
+	float: left;
+	margin-right: 65px;
+}
+#main-register-email{
+	width: 364px;	
+	height: 25px;
+	margin-top: 15px;
+}
+#main-registration-adress{
+	width: 364px;
+}
+#footer{
+	background-color: white;
+}
+#users-search-select{
+	margin-right: -7px;
+	height: 42px;
+	width: 110px;
+	background: #fefefe; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fefefe 0%, #eaeaea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fefefe 0%,#eaeaea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fefefe 0%,#eaeaea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fefefe 0%,#eaeaea 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #fefefe 0%,#eaeaea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefefe', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
+
+}
+#appendedInputButton{
+	width: 400px;
+	height: 32px;
+	margin-right: -10px;
+	-webkit-border-radius: 0px;
+	z-index: 5;
+}
+#users-search-go{
+	border-bottom-left-radius: 0px;
+	border-top-left-radius: 0px;
+	
+	z-index: 1;
+	border: none;
+	margin-top: -9px;
+	height: 45px;
+	border: 1px solid #485059;
+	background: #72787f; /* Old browsers */
+	background: -moz-linear-gradient(top,  #72787f 0%, #505760 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72787f), color-stop(100%,#505760)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #72787f 0%,#505760 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #72787f 0%,#505760 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #72787f 0%,#505760 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #72787f 0%,#505760 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72787f', endColorstr='#505760',GradientType=0 ); /* IE6-9 */
+}
+#users-search-label{
+	float: left;
+	margin-right: 25px;
+	font-size: 18px;
+	margin-top: 10px;
+}
+#users-search-main-div{
+	margin-top: 25px;
+}
+.users-search-links{
+	margin-left: 215px;
+	margin-right: 10px;
+
+}
+.search-show-message{
+	margin-top: 7px;
+	height: 50px;
+	width: 100%;
+}

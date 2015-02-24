@@ -4,23 +4,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
 </head>
 <body>
 <body>
-<h1>
+<div class="container">
 	<h1>User page</h1><br>
 	<p> Login as: <sec:authentication property="name"/></p>
 	
 	<a href="${pageContext.request.contextPath}/logout">Logout</a><br>
-	<a href="${pageContext.request.contextPath}/search">Search page </a><br>
-	<a href="${pageContext.request.contextPath}/users">Users page </a><br>
-	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
-		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
-	</sec:authorize>
+	<a href="${pageContext.request.contextPath}/users/1">Users page </a><br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
 		<a href="${pageContext.request.contextPath}/edit/${user.userId}"> Edit</a><br><br>
 	</sec:authorize>
 	
@@ -103,6 +98,7 @@
 				</c:when>
 		</c:choose>	
 	</table>
+	</div>
 </body>
 </body>
 </html>

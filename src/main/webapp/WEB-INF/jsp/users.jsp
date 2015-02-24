@@ -1,72 +1,236 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ include file="taglibs.jsp"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-  	$('.message').delay(3000).fadeOut(800);
-});
-</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Пользователи</title>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.10.2.js' />"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui.js' />"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/bootstrap.min.js' />"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/show_message.js' />"></script>
+<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/bootstrap.min.css' />" />
+
 
 </head>
-<body> 
+<body>
+<div class = "container" >
 	<h1>Users page</h1>
-	<p> Login as: <sec:authentication property="name"/></p><br>
-	<c:if test="${not empty success}"> <p class = "message">${success}</p><br><br></c:if>
-	<a href="${pageContext.request.contextPath}/logout"> Logout </a><br>
-	<sec:authorize access="hasRole('ROLE_REGULAR_USER')" >
-		<a href="${pageContext.request.contextPath}/message"> Send message</a><br><br>
-	</sec:authorize>
+	<p>
+		Login as:
+		<sec:authentication property="name" />
+	</p>
+	<br>
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="${pageContext.request.contextPath}/message"> Show messages</a><br><br>
-		<a href="${pageContext.request.contextPath}/register">Register user</a><br><br>
+		<c:if test="${not empty success}">
+			<p class="message">${success}</p>
+			<br>
+			<br>
+		</c:if>
 	</sec:authorize>
-	<a href="${pageContext.request.contextPath}/search"> Search page</a><br>
+
+	<a href="${pageContext.request.contextPath}/logout"> Logout </a>
+	<br>
+
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<a href="${pageContext.request.contextPath}/register">Register user</a>
+		<br>
+		<br>
+	</sec:authorize>
 	
-	<table border = 1 align="center">
-		<tr style = "font-weight: bold; font-size: 22px;" align="center">
-			<td>User login</td>
-			<td>User role</td>
-			<td>User lastName</td>
-			<td>User phone</td>
-			<td>User Gender</td>
-			<td>User Education</td>
-			<sec:authorize access="hasRole('ROLE_ADMIN')"> 
-				<td>User Action</td>
-			</sec:authorize>
-		</tr>
+	<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
+		<table>
+			<tr>
+				<td>Search: </td>
+				<td>
+					<form:input name = "name" path="searchRow"/> 
+				</td>
+				<script>
+  					document.getElementsByName('name')[0].focus();
+				</script>
+			</tr>
+			<tr>
+				<td>
+					<form:radiobutton path="searchType" value="all" checked = "checked" />all users<br>
+					<form:radiobutton path="searchType" value="login" />login<br>
+					<form:radiobutton path="searchType" value="phone"/>phone <br>
+					<form:radiobutton path="searchType" value="lastName" />last Name<br>					
+				</td>			
+			</tr>			
+			<tr>
+				<td>
+					<input type = "submit" name = "submit" value = "submit">
+				</td>
+			</tr>						
+		</table>
+	</form:form>
+	
+	
+
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+	<table class="table table-striped table-bordered">
+		<thead style="background-color: #596068; color: white">		
+			<tr>
+				<th>id</th>
+				<th>Логин</th>
+				<th>Роль</th>
+				<th>ФИО</th>
+				<th>Телефон</th>
+				<th>Статус</th>
+				<th>Почта</th>
+				<th>Стать</th>
+				<th>Что с ним сделать?</th>
+			</tr>
+		</thead>
+		<tbody>
 		<c:forEach var="user" items="${user}">
-		<tr>
-			<td><a href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
 			<c:choose>
-				<c:when test="${user.userRole == 'ROLE_ADMIN' }">
-					<td>admin</td>
-				</c:when>
-				<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
-					<td>user</td>
-				</c:when>
-				<c:otherwise>
-					<td>unknown role</td>
-				</c:otherwise>
-			</c:choose>
-			<td>${user.userlastName}</td>
-			<td>${user.userPhone }</td>
-			<td>${user.userGender}</td>
-			<td>${user.userEducation}</td>
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<td> 
-				<a href="${pageContext.request.contextPath}/edit/${user.userId}">Edit </a>
-				<a href="${pageContext.request.contextPath}/delete/${user.userId}">Delete </a>
-			</td>
-			</sec:authorize>
-		</tr>
+					<c:when test="${user.userEnable == false }">
+						<tr class = "error">
+							<td>${user.userId}</td>
+							<td><a href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
+							<c:choose>
+								<c:when test="${user.userRole == 'ROLE_ADMIN' }">
+									<td>admin</td>
+								</c:when>
+								<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
+									<td>user</td>
+								</c:when>
+								<c:otherwise>
+									<td>unknown role</td>
+								</c:otherwise>
+							</c:choose>
+							<td>${user.userlastName}</td>
+							<td>${user.userPhone }</td>
+							<c:choose>
+								<c:when test="${user.userEnable == true }">
+									<td class = "error">живой</td>
+								</c:when>
+								<c:when test="${user.userEnable == false }">
+									<td>казнен</td>
+								</c:when>
+							</c:choose>
+							<td>${user.userMail}</td>
+							<td>${user.userGender}</td>
+							<c:choose>
+								<c:when test="${user.userEnable == false }">
+									<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">воскресить</a></td>
+								</c:when>
+								<c:otherwise>
+								<td>
+									<a href="${pageContext.request.contextPath}/edit/${user.userId}">поправить</a> 
+									<a href="${pageContext.request.contextPath}/delete/${user.userId}">казнить</a>
+								</td>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td>${user.userId}</td>
+							<td><a href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
+							<c:choose>
+								<c:when test="${user.userRole == 'ROLE_ADMIN' }">
+									<td>admin</td>
+								</c:when>
+								<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
+									<td>user</td>
+								</c:when>
+								<c:otherwise>
+									<td>unknown role</td>
+								</c:otherwise>
+							</c:choose>
+							<td>${user.userlastName}</td>
+							<td>${user.userPhone }</td>
+							<c:choose>
+								<c:when test="${user.userEnable == true }">
+									<td class = "error">живой</td>
+								</c:when>
+								<c:when test="${user.userEnable == false }">
+									<td>казнен</td>
+								</c:when>
+							</c:choose>
+							<td>${user.userMail}</td>
+							<td>${user.userGender}</td>
+							<c:choose>
+								<c:when test="${user.userEnable == false }">
+									<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">воскресить</a></td>
+								</c:when>
+								<c:otherwise>
+								<td>
+									<a href="${pageContext.request.contextPath}/edit/${user.userId}">поправить</a> 
+									<a href="${pageContext.request.contextPath}/delete/${user.userId}">казнить</a>
+								</td>
+					</c:otherwise>
+				</c:choose>
+			</tr>
+
+
+
+					</c:otherwise>
+				</c:choose>
+					
+			
 		</c:forEach>
-	</table>
-	
+	</tbody>
+</table>
+	</sec:authorize>
+	<sec:authorize access="hasRole('ROLE_REGULAR_USER')">
+		<table class="table table-hover table-bordered table-striped">
+			<tr>
+				<td>Логин</td>
+				<td>Роль</td>
+				<td>ФИО</td>
+				<td>Телефон</td>
+				<td>Почта</td>
+				<td>Стать</td>
+			</tr>
+			<c:forEach var="user" items="${user}">
+				<c:if test="${user.userEnable == true}">
+					<tr>
+						<td><a
+							href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
+						<c:choose>
+							<c:when test="${user.userRole == 'ROLE_ADMIN' }">
+								<td>admin</td>
+							</c:when>
+							<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
+								<td>user</td>
+							</c:when>
+							<c:otherwise>
+								<td>unknown role</td>
+							</c:otherwise>
+						</c:choose>
+						<td>${user.userlastName}</td>
+						<td>${user.userPhone }</td>
+						<td>${user.userMail}</td>
+						<td>${user.userGender}</td>
+					</tr>
+				</c:if>
+			</c:forEach>
+		</table>
+	</sec:authorize>
+		<div class="pagination pagination-centered">
+		  <ul>
+			 <c:if test="${not empty pagi.previousPage }">
+				<li><a href="${pageContext.request.contextPath}/users/${pagi.previousPage}">Предыдущая</a></li>
+			</c:if>
+			<c:forEach items="${pagi.pageList}" var="page">
+				<c:choose>
+					<c:when test="${pagi.currentPage == page}">
+					 	<li class="active"><a href="#">${page}</a></li>
+					</c:when>
+					<c:otherwise>
+	     				<li> <a href="${pageContext.request.contextPath}/users/${page}"> ${page} </a> </li>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach> 	  
+		    <c:if test="${not empty pagi.nextPage}">
+				<li><a href="${pageContext.request.contextPath}/users/${pagi.nextPage}">Следующая</a></li>
+			</c:if>	   
+		  </ul>
+		</div>
+	</div>
 </body>
 </html>

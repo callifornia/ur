@@ -3,24 +3,26 @@ package com.prokopiv.formvalidation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.prokopiv.bean.User;
 import com.prokopiv.service.UserService;
 
-
+@Repository
 public class UserFormValidation implements Validator {
 	
 	private static final Logger logger = LogManager.getLogger(UserFormValidation.class);
-
+	
 	@Autowired
 	UserService userService;
 	
@@ -41,19 +43,24 @@ public class UserFormValidation implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
-		String login = user.getUserLogin();
-		logger.info("login: " + login);
-		if (login.length() < 4 || login.length() > 40) {
+		
+		if (user.getUserLogin() != null && (user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40)) {
 			errors.rejectValue("userLogin", "user.err.login");
-		}
-		if(userService.getUserByLogin(login)){
-			logger.info("Validator: check userLogin. true");
-		} else {
-			logger.info("Validator: check userLogin. false");
-		}
-		if (user.getUserPassword().length() < 6	|| user.getUserPassword().length() > 40) {
+		} 
+		if(user.getUserLogin() != null && !errors.hasFieldErrors("userLogin") && userService.userExist(user.getUserLogin())){
+			errors.rejectValue("userLogin", "user.err.login.exist");
+		} 
+		
+		if(user.getUserPassword().isEmpty()){
+			user.setUserPassword(null);
+		} else if (user.getUserPassword().length() < 6	|| user.getUserPassword().length() > 40) {
+			errors.rejectValue("userPassword", "user.err.password");
+		} 
+		
+		if (user.getUserPassword() == null && user.getUserId() == null) {
 			errors.rejectValue("userPassword", "user.err.password");
 		}
+		
 		if (user.getUserlastName().isEmpty()) {
 			errors.rejectValue("userlastName", "user.err.lastName");
 		} else if(user.getUserlastName().length() > 70){
