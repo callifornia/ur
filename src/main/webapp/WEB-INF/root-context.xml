@@ -22,8 +22,8 @@
 		</bean>	
 	</mvc:interceptors>
 
-	<bean class = "com.prokopiv.bean.User" />
-	<bean class = "com.prokopiv.bean.Search" />
+	<bean class = "com.prokopiv.bean.User"/>
+	<bean class = "com.prokopiv.bean.Search"/>
 
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />

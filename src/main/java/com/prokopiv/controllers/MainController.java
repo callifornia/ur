@@ -45,6 +45,7 @@ public class MainController {
 	@Autowired Search search;
 	@Autowired UserFormValidation userFormValidation;
 	@Autowired SearchFormValidator searchValidator;
+	
 	@Autowired Pagination pagination;
 	@Autowired @Qualifier("authMgr") private AuthenticationManager authMgr;
 	@Autowired private UserDetailsService userDetailsSvc;
@@ -84,7 +85,7 @@ public class MainController {
 		} else {
 			redirectAttribute.addFlashAttribute("success", "Не получилось");
 		}
-		return "redirect:/users/1";
+		return "redirect:/users";
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -100,11 +101,11 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/inserted", method = RequestMethod.POST)
-	public String insertAnonimus(@Validated User user,BindingResult bindingResult, Model model)	{
+	public String insertAnonimus(@Validated User user, BindingResult bindingResult, Model model)	{
 		if(bindingResult.hasErrors()){
-			insertList(model);
+//			insertList(model);
 			model.addAttribute("user", user);
-			return "registered";
+			return "login";
 		} else {
 			userService.insertUser(user);
 			try {
@@ -113,12 +114,12 @@ public class MainController {
 				authMgr.authenticate(auth);
 				if(auth.isAuthenticated()){
 					SecurityContextHolder.getContext().setAuthentication(auth);
-					return "redirect:/users/1";
+					return "redirect:/users";
 				}
 			} catch(Exception e){
 				logger.info("beeeeeeeeeeeeeeeeeeee");
 			}
-			logger.info("redirect to ligon page");
+			logger.info("redirect to login page");
 			return "redirect:/login";
 		}
 	}
@@ -132,7 +133,7 @@ public class MainController {
 		} else {
 			redirectAttribute.addFlashAttribute("success", "Succesful user registered");
 			userService.insertUser(user);
-			return "redirect:/users/1";
+			return "redirect:/users";
 		}
 	}
 	
@@ -149,7 +150,7 @@ public class MainController {
 		} else {
 			userService.updateUser(user);
 			redirectAttribute.addFlashAttribute("success", "Succesful user update");
-			return "redirect:users/1";
+			return "redirect:/users";
 		}
 	}
 
@@ -165,37 +166,26 @@ public class MainController {
 		}
 	}
 	
-	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST)
-	public String userSearch(Model model, @ModelAttribute(value = "search") Search search, RedirectAttributes redirectAttribute){
-		redirectAttribute.addFlashAttribute("user", userService.getUserBySearch(search, pagination));
+	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST) 
+	public String userSearch(Model model, @ModelAttribute(value = "search") Search searchRequest, RedirectAttributes redirectAttribute){
+		search = searchRequest;
 		return "redirect:/users/1";
-	}
-	
-	@RequestMapping (value = "/users/{page}", method = RequestMethod.GET)
+	} 
+	 
+	@RequestMapping (value = "/users/{page}", method = RequestMethod.GET) 
 	public String usersPage(@PathVariable (value = "page") Integer page, Model model){
 		pagination.setCurrentPage(page);
 		model.addAttribute("pagi", pagination);
 		model.addAttribute("search", search);
-		
-		if(model.containsAttribute("user")){
-			return "users";
-		}
-		
-		model.addAttribute("user", userService.getUserList(pagination));
+		model.addAttribute("user", userService.getUserBySearch(search, pagination));
 		return "users";
-	}
-	
+	} 
 	
 	@RequestMapping(value = "/users")
-	public String users(Model model)	{
-		if(model.containsAttribute("success")){
-			logger.info("has key: " + model.asMap().get("success"));
-		} else {
-			logger.info("dont have a key success");
-		}
-		if(model.containsAttribute("user")){
-			return "users";
-		}
+	public String users(Model model){
+		pagination.setCurrentPage(1);
+		model.addAttribute("pagi", pagination);
+		model.addAttribute("search", search);
 		model.addAttribute("user", userService.getUserList(pagination));
 		return "users";
 	}
@@ -205,13 +195,20 @@ public class MainController {
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
 		redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
 		userService.deleteUser(id);
-		return "redirect:/users/1";
+		return "redirect:/users";
 	}
 	
 	private void insertList(Model model){
 		List<String> userGender = new ArrayList<String>(); 
 		userGender.add("Male");
-		userGender.add("Female");
+		userGender.add("Female");		
+		
+		Map<String, String> search = new HashMap<String,String>();
+		
+		search.put("all", "all");
+		search.put("phone", "Телефон");
+		search.put("lastName", "ФИО");
+		search.put("login", "Логин");
 		
 		Map<String,String> userRole = new HashMap<String,String>();
 		userRole.put("ROLE_ADMIN", "Admin");
@@ -222,9 +219,9 @@ public class MainController {
 		userEducation.add("Master Degree");
 		userEducation.add("Other");
 		
+		model.addAttribute("searchName", search);
 		model.addAttribute("roles", userRole);
 		model.addAttribute("genders", userGender);
 		model.addAttribute("education", userEducation);
 	}
-
 }

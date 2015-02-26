@@ -15,7 +15,7 @@ public class Pagination {
 	private Integer previousPage;
 	private Integer totalPages;
 	private List<Integer> pageList;
-	
+
 	public List<Integer> getPageList(){
 		return this.pageList;
 	}
@@ -31,8 +31,7 @@ public class Pagination {
 			this.nextPage = currentPage + 1;
 		} else {
 			this.nextPage = null;
-		}
-		makePagesList(currentPage);
+		}		
 	}
 
 	private void makePagesList(Integer curretPage){
@@ -43,7 +42,14 @@ public class Pagination {
 				this.pageList = makeList(totalPages - COUNT_PAGE_LINKS + 1);
 			}
 		} else {
-			this.pageList = makeList(1);
+			if(totalPages > 5){
+				this.pageList = makeList(1);
+			} else {
+				this.pageList = new ArrayList<Integer>();
+				for(int i = 1; i <= totalPages ; i++){
+					this.pageList.add(i);
+				}
+			}
 		}
 	}
 	
@@ -79,6 +85,12 @@ public class Pagination {
 	public void setTotalRecords(Integer totalRecords) {
 		this.totalPages = (int)Math.ceil(totalRecords * 1.0 / LIMIT_RECORDS);
 		this.totalRecords = totalRecords;
+		if(totalPages <= 1){
+			this.nextPage = null;
+		} else if (this.totalPages != this.currentPage) {
+			this.nextPage = currentPage + 1;
+		}
+		makePagesList(currentPage);
 	}
 	
 	public Integer getTotalRecords(){

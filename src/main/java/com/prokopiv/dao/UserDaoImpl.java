@@ -51,9 +51,10 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public List<User> getUsersByLogin(String login) {
+	public List<User> getUsersByLogin(String login, Pagination pagination) {
 		ArrayList<User> userList = new ArrayList<User>();
-		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_name like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id)";
+		String sqlCount = "SELECT count(*) from user_authentication WHERE user_name like ?";	
+		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_name like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);){
 			ps.setString(1, login + "%");
@@ -70,6 +71,14 @@ public class UserDaoImpl implements UserDao {
 				user.setUserGender(rs.getString("user_gender"));
 				userList.add(user);
 			}
+			try( PreparedStatement pss = connection.prepareStatement(sqlCount);){
+				pss.setString(1, login + "%");
+				ResultSet rss = pss.executeQuery();
+				rss.next();
+				pagination.setTotalRecords(rss.getInt(1));				
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
 		} catch(SQLException e){
 			e.printStackTrace();
 		}		
@@ -77,13 +86,14 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public List<User> getUsersByPhone(String phone) {
+	public List<User> getUsersByPhone(String phone, Pagination pagination) {
 		ArrayList<User> userList = new ArrayList<User>();
-		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_phone like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id)";
-		try (Connection connection = dataSource.getConnection();
-				PreparedStatement ps = connection.prepareStatement(sql);){
+		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_phone like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit "  + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
+		String sqlCount = "SELECT count(*) from user_general WHERE user_phone like ?";			
+		try (Connection connection = dataSource.getConnection();){
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, phone + "%");
-			ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();			
 			while(rs.next()){
 				User user = new User();
 				user.setUserId(String.valueOf(rs.getInt("user_id")));
@@ -95,7 +105,15 @@ public class UserDaoImpl implements UserDao {
 				user.setUserMail(rs.getString("user_mail"));
 				user.setUserGender(rs.getString("user_gender"));
 				userList.add(user);
-			}
+			}			
+			try( PreparedStatement pss = connection.prepareStatement(sqlCount);){
+				pss.setString(1, phone + "%");
+				ResultSet rss = pss.executeQuery();
+				rss.next();
+				pagination.setTotalRecords(rss.getInt(1));				
+			} catch(SQLException e){
+				e.printStackTrace();
+			}			
 		} catch(SQLException e){
 			e.printStackTrace();
 		}		
@@ -103,9 +121,40 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public List<User> getUsersByLastName(String lastName) {
+	public List<User> getUsers(Pagination pagination) {
 		ArrayList<User> userList = new ArrayList<User>();
-		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_fio like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id)";
+		String getUsersSql = "SELECT ua.user_id, ua.user_enable, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ug.user_mail, ug.user_gender "
+									+ "FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
+		try (Connection connection = dataSource.getConnection(); 
+				Statement st = connection.createStatement();){
+			ResultSet rs = st.executeQuery(getUsersSql);
+			while (rs.next()){
+				User user = new User();			
+				user.setUserId(String.valueOf(rs.getInt("user_id")));
+				user.setUserLogin(rs.getString("user_name"));
+				user.setUserRole(rs.getString("role_name"));
+				user.setUserlastName(rs.getString("user_fio"));
+				user.setUserPhone(rs.getString("user_phone"));
+				user.setUserEnable(rs.getBoolean("user_enable"));
+				user.setUserMail(rs.getString("user_mail"));
+				user.setUserGender(rs.getString("user_gender"));
+				userList.add(user);
+			}
+			rs = st.executeQuery("SELECT count(*) from user_authentication");
+			rs.next();
+			pagination.setTotalRecords(rs.getInt(1));
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return userList;
+	}
+
+	
+	@Override
+	public List<User> getUsersByLastName(String lastName, Pagination pagination) {
+		ArrayList<User> userList = new ArrayList<User>();
+		String sqlCount = "SELECT count(*) from user_general WHERE user_fio like ?";
+		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_fio like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);){
 			ps.setString(1, lastName + "%");
@@ -121,7 +170,16 @@ public class UserDaoImpl implements UserDao {
 				user.setUserMail(rs.getString("user_mail"));
 				user.setUserGender(rs.getString("user_gender"));
 				userList.add(user);
+			}			
+			try( PreparedStatement pss = connection.prepareStatement(sqlCount);){
+				pss.setString(1, lastName + "%");
+				ResultSet rss = pss.executeQuery();
+				rss.next();
+				pagination.setTotalRecords(rss.getInt(1));				
+			} catch(SQLException e){
+				e.printStackTrace();
 			}
+
 		} catch(SQLException e){
 			e.printStackTrace();
 		}		
@@ -173,35 +231,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 
-	@Override
-	public List<User> getUsers(Pagination pagination) {
-		ArrayList<User> userList = new ArrayList<User>();
-		String getUsersSql = "SELECT ua.user_id, ua.user_enable, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ug.user_mail, ug.user_gender "
-									+ "FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
-		try (Connection connection = dataSource.getConnection(); 
-				Statement st = connection.createStatement();){
-			ResultSet rs = st.executeQuery(getUsersSql);
-			while (rs.next()){
-				User user = new User();			
-				user.setUserId(String.valueOf(rs.getInt("user_id")));
-				user.setUserLogin(rs.getString("user_name"));
-				user.setUserRole(rs.getString("role_name"));
-				user.setUserlastName(rs.getString("user_fio"));
-				user.setUserPhone(rs.getString("user_phone"));
-				user.setUserEnable(rs.getBoolean("user_enable"));
-				user.setUserMail(rs.getString("user_mail"));
-				user.setUserGender(rs.getString("user_gender"));
-				userList.add(user);
-			}
-			rs = st.executeQuery("SELECT count(*) from user_authentication");
-			rs.next();
-			pagination.setTotalRecords(rs.getInt(1));
-		} catch(SQLException e){
-			e.printStackTrace();
-		}
-		return userList;
-	}
-
+	
 	@Override
 	public boolean insertUser(User user) {
 		boolean result = false;		

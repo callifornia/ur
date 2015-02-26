@@ -72,7 +72,7 @@ public class UserFormValidation implements Validator {
 		if (user.getUserAdress().length() > 254) {
 			errors.rejectValue("userAdress", "user.err.adress");
 		}
-		if (user.getUserDescription().length() > 3000) {
+		if (user.getUserDescription() !=null && user.getUserDescription().length() > 3000) {
 			errors.rejectValue("userDescription", "user.err.description");
 		}
 		if(!user.getUserMail().isEmpty() && !isEmailValid(user.getUserMail())){

@@ -45,12 +45,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getUserBySearch(Search search, Pagination pagination) {
 		List<User> usersList = null;
+		if(search.getSearchRow() != null  && search.getSearchRow().isEmpty()  && !"all".equalsIgnoreCase(search.getSearchType())){
+			pagination.setTotalRecords(0);
+			return usersList;
+		}
 		switch(search.getSearchType()){
-			case "login" : usersList = userDao.getUsersByLogin(search.getSearchRow());
+			case "login" : usersList = userDao.getUsersByLogin(search.getSearchRow(), pagination);
 			break;
-			case "phone" : usersList = userDao.getUsersByPhone(search.getSearchRow());
+			case "phone" : usersList = userDao.getUsersByPhone(search.getSearchRow(), pagination);
 			break;
-			case "lastName" : usersList = userDao.getUsersByLastName(search.getSearchRow());
+			case "lastName" : usersList = userDao.getUsersByLastName(search.getSearchRow(), pagination);
 			break;
 			case "all" : usersList = userDao.getUsers(pagination);
 			break;

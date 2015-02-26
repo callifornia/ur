@@ -6,68 +6,69 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Пользователи</title>
-<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.10.2.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/bootstrap.min.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/show_message.js' />"></script>
-<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/bootstrap.min.css' />" />
+
+	<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.10.2.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js' />"></script>
+	<script type="text/javascript" src="<c:url value='/resources/js/show_message.js' />"></script>
+	<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/bootstrap.css' />" />
+	<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/style.css' />" />
 
 
 </head>
 <body>
-<div class = "container" >
-	<h1>Users page</h1>
-	<p>
-		Login as:
-		<sec:authentication property="name" />
-	</p>
-	<br>
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<c:if test="${not empty success}">
-			<p class="message">${success}</p>
-			<br>
-			<br>
-		</c:if>
-	</sec:authorize>
+<div class = "header" id = "header">
+	<div class = "container">
+		<div class = "row">
+			<div class = "span12"> 
+				<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
+					 <div id = "users-search-main-div">
+				    	<label id = "users-search-label">Поиск</label>
+				    	<form:select path="searchType" class="span2" id = "users-search-select">
+				    			<form:option  value="all" checked = "checked">All</form:option>
+				    			<form:option  value="login" checked = "checked">Логин</form:option>
+				    			<form:option  value="phone" checked = "checked">Телефон</form:option>
+				    			<form:option  value="lastName" checked = "checked">ФИО</form:option>
+				    	</form:select>
+ 						<form:input path="searchRow" class="span2" id="appendedInputButton" size="16" type="text" name = "name" />  						
+  						<button class="btn btn-inverse" id = "users-search-go" type="submit">Go!</button>  						
+  						
+  						<sec:authorize access="hasRole('ROLE_ADMIN')">
+	  						<a href="${pageContext.request.contextPath}/register" class = "users-search-links" >
+	  							<img src="<c:url value='/resources/img/add-user-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/add-user-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/add-user-icon.png' />'" border = "0" alt = "">
+	  						</a>
+						</sec:authorize>
+						<a href="${pageContext.request.contextPath}/logout">
+							<img src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0" alt = "">
+						</a>
+					</div>				 
+				</form:form>
+			</div>
+		</div>
+	</div>
+</div>
 
-	<a href="${pageContext.request.contextPath}/logout"> Logout </a>
-	<br>
-
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<a href="${pageContext.request.contextPath}/register">Register user</a>
-		<br>
-		<br>
-	</sec:authorize>
-	
-	<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
-		<table>
-			<tr>
-				<td>Search: </td>
-				<td>
-					<form:input name = "name" path="searchRow"/> 
-				</td>
-				<script>
-  					document.getElementsByName('name')[0].focus();
-				</script>
-			</tr>
-			<tr>
-				<td>
-					<form:radiobutton path="searchType" value="all" checked = "checked" />all users<br>
-					<form:radiobutton path="searchType" value="login" />login<br>
-					<form:radiobutton path="searchType" value="phone"/>phone <br>
-					<form:radiobutton path="searchType" value="lastName" />last Name<br>					
-				</td>			
-			</tr>			
-			<tr>
-				<td>
-					<input type = "submit" name = "submit" value = "submit">
-				</td>
-			</tr>						
-		</table>
-	</form:form>
-	
-	
-
+<!-- body-->
+<div class = "container">
+	<div class = "row">
+		<div class = "span3">
+			<div class = "search-show-message">
+				${pagi.totalPages}
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<c:choose>
+						<c:when test="${not empty success}">
+							<div class="alert alert-success">
+								${success}	
+							</div>
+						</c:when>								
+						<c:otherwise>
+							&nbsp 
+						</c:otherwise>
+					</c:choose>		
+				</sec:authorize>
+			</div>
+		</div>
+	</div>	
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 	<table class="table table-striped table-bordered">
 		<thead style="background-color: #596068; color: white">		
@@ -165,13 +166,8 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-
-
-
 					</c:otherwise>
 				</c:choose>
-					
-			
 		</c:forEach>
 	</tbody>
 </table>
@@ -215,7 +211,7 @@
 		  <ul>
 			 <c:if test="${not empty pagi.previousPage }">
 				<li><a href="${pageContext.request.contextPath}/users/${pagi.previousPage}">Предыдущая</a></li>
-			</c:if>
+			 </c:if>
 			<c:forEach items="${pagi.pageList}" var="page">
 				<c:choose>
 					<c:when test="${pagi.currentPage == page}">
@@ -225,12 +221,12 @@
 	     				<li> <a href="${pageContext.request.contextPath}/users/${page}"> ${page} </a> </li>
 					</c:otherwise>
 				</c:choose>
-			</c:forEach> 	  
-		    <c:if test="${not empty pagi.nextPage}">
+			 </c:forEach> 	  
+		     <c:if test="${not empty pagi.nextPage}">
 				<li><a href="${pageContext.request.contextPath}/users/${pagi.nextPage}">Следующая</a></li>
-			</c:if>	   
+			 </c:if>	   
 		  </ul>
 		</div>
-	</div>
+</div>
 </body>
 </html>

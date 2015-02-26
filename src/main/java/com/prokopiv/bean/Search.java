@@ -1,13 +1,13 @@
 package com.prokopiv.bean;
 
+
 public class Search {
 
-	private String searchType;
+	private String searchType = "all";
 	private String searchRow;
 	
 	public Search() {
 	}
-
 	
 	public String getSearchRow() {
 		return searchRow;

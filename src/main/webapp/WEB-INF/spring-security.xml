@@ -30,7 +30,7 @@
 		 <security:intercept-url pattern="/register" access="hasRole('ROLE_ADMIN')" />
 		 
 		 <security:form-login login-page="/login" 
-							 default-target-url="/users/1" 
+							 default-target-url="/users" 
 							 authentication-failure-url="/loginError" />
 		
 		 <security:logout logout-url="/logout" 
