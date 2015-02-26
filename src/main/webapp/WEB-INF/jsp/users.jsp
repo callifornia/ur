@@ -53,7 +53,6 @@
 	<div class = "row">
 		<div class = "span3">
 			<div class = "search-show-message">
-				${pagi.totalPages}
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<c:choose>
 						<c:when test="${not empty success}">
