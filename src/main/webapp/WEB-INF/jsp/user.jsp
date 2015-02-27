@@ -141,11 +141,11 @@
 				</tr>
 			</table>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<a href = "${pageContext.request.contextPath}/edit/${user.userId}" id = "user-edit-button" class = "btn btn-success"> Редактировать</a>
+				<a href = "${pageContext.request.contextPath}/edit/${user.userId}" id = "user-edit-button" class = "btn  btn-primary"> Редактировать</a>
 			<a href = "${pageContext.request.contextPath}/users" class = "btn"> На главную</a>
 			</sec:authorize>			
 			<sec:authorize access="hasRole('ROLE_REGULAR_USER')">
-				<a href = "${pageContext.request.contextPath}/users" class = "btn btn-success"> На главную</a>
+				<a href = "${pageContext.request.contextPath}/users" class = "btn  btn-primary"> На главную</a>
 			</sec:authorize>
 		</div>
 	</div>

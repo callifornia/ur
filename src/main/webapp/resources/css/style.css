@@ -306,6 +306,17 @@ body{
 	-webkit-border-radius: 0px;
 	z-index: 5;
 }
+#users-table-edit-icon{
+	margin-left: 45px;
+}
+
+
+#users-table-delete-icon{
+	margin-left: 25px;
+}
+
+
+
 #users-search-go{
 	border-bottom-left-radius: 0px;
 	border-top-left-radius: 0px;
@@ -338,7 +349,7 @@ body{
 	margin-right: 10px;
 
 }
-.search-show-message{
+#search-show-message{
 	margin-top: 7px;
 	height: 50px;
 	width: 100%;

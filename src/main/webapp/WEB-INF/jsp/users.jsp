@@ -35,11 +35,11 @@
   						
   						<sec:authorize access="hasRole('ROLE_ADMIN')">
 	  						<a href="${pageContext.request.contextPath}/register" class = "users-search-links" >
-	  							<img src="<c:url value='/resources/img/add-user-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/add-user-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/add-user-icon.png' />'" border = "0" alt = "">
+	  							<img src="<c:url value='/resources/img/add-user-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/add-user-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/add-user-icon.png' />'" border = "0">
 	  						</a>
 						</sec:authorize>
 						<a href="${pageContext.request.contextPath}/logout">
-							<img src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0" alt = "">
+							<img src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0">
 						</a>
 					</div>				 
 				</form:form>
@@ -51,12 +51,12 @@
 <!-- body-->
 <div class = "container">
 	<div class = "row">
-		<div class = "span3">
-			<div class = "search-show-message">
+		<div class = "span4">
+			<div id = "search-show-message">
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<c:choose>
 						<c:when test="${not empty success}">
-							<div class="alert alert-success">
+							<div id = "show" class="alert alert-success">
 								${success}	
 							</div>
 						</c:when>								
@@ -126,9 +126,13 @@
 									<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">воскресить</a></td>
 								</c:when>
 								<c:otherwise>
-								<td>
-									<a href="${pageContext.request.contextPath}/edit/${user.userId}">поправить</a> 
-									<a href="${pageContext.request.contextPath}/delete/${user.userId}">казнить</a>
+								<td align="center">
+									<a href="${pageContext.request.contextPath}/edit/${user.userId}">
+										<img id = "users-table-edit-icon" src="<c:url value='/resources/img/edit-icon.png' />"    onmouseover = "this.src='<c:url value='/resources/img/edit-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/edit-icon.png' />'" border = "0" >
+									</a> 
+									<a href="${pageContext.request.contextPath}/delete/${user.userId}">
+										<img id = "users-table-delete-icon" src="<c:url value='/resources/img/delete-icon.png' />"  onmouseover = "this.src='<c:url value='/resources/img/delete-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/delete-icon.png' />'" border = "0" >
+									</a>
 								</td>
 								</c:otherwise>
 							</c:choose>
@@ -166,9 +170,13 @@
 									<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">воскресить</a></td>
 								</c:when>
 								<c:otherwise>
-								<td>
-									<a href="${pageContext.request.contextPath}/edit/${user.userId}">поправить</a> 
-									<a href="${pageContext.request.contextPath}/delete/${user.userId}">казнить</a>
+								<td align="center">
+									<a href="${pageContext.request.contextPath}/edit/${user.userId}">
+										<img id = "users-table-edit-icon" src="<c:url value='/resources/img/edit-icon.png' />"    onmouseover = "this.src='<c:url value='/resources/img/edit-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/edit-icon.png' />'" border = "0" alt = "поправить"    >
+									</a> 
+									<a href="${pageContext.request.contextPath}/delete/${user.userId}">
+										<img id = "users-table-delete-icon" src="<c:url value='/resources/img/delete-icon.png' />"  onmouseover = "this.src='<c:url value='/resources/img/delete-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/delete-icon.png' />'" border = "0" alt = "казнить"    >
+									</a>
 								</td>
 					</c:otherwise>
 				</c:choose>
