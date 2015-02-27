@@ -68,6 +68,7 @@
 			</div>
 		</div>
 	</div>	
+	
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 	<table class="table table-striped table-bordered">
 		<thead style="background-color: #596068; color: white">		
@@ -84,6 +85,13 @@
 			</tr>
 		</thead>
 		<tbody>
+		<c:if test="${empty user}">
+				<tr>
+					<td colspan="9" style = "padding-top: 100px;">
+						<img alt="" src="<c:url value='/resources/img/nothink.png' />">
+					</td>
+				</tr>
+			</c:if>
 		<c:forEach var="user" items="${user}">
 			<c:choose>
 					<c:when test="${user.userEnable == false }">
