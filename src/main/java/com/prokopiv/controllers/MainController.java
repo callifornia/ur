@@ -74,6 +74,7 @@ public class MainController {
 	
 	@RequestMapping(value = "/user/{id}")
 	public String user(@PathVariable(value = "id") String id,  Model model){
+		model.addAttribute("search", search);
 		model.addAttribute("user", userService.getUserById(id));
 		return "user";
 	}
@@ -131,25 +132,27 @@ public class MainController {
 			model.addAttribute("user", user);
 			return "register";
 		} else {
-			redirectAttribute.addFlashAttribute("success", "Succesful user registered");
+			redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");
 			userService.insertUser(user);
 			return "redirect:/users";
 		}
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(@ModelAttribute(value="user") @Validated User user, 
+	public String update(@ModelAttribute(value="user") @Validated User user,
+//						@ModelAttribute(value = "search") Search searchRequest,
 						BindingResult bindingResult, 
 						Model model, 
 						RedirectAttributes redirectAttribute){
 		
 		if(bindingResult.hasErrors()){
+			model.addAttribute("search", search);
 			model.addAttribute("user", user);
 			insertList(model);
 			return "edit";
 		} else {
 			userService.updateUser(user);
-			redirectAttribute.addFlashAttribute("success", "Succesful user update");
+			redirectAttribute.addFlashAttribute("success", "Данные успешно обновлены");
 			return "redirect:/users";
 		}
 	}
@@ -157,6 +160,7 @@ public class MainController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String edit(@PathVariable("id") String id, Model model){
 		insertList(model);
+		model.addAttribute("search", search);
 		if(model.containsAttribute("user")){
 			return "edit";
 		} else{
@@ -211,8 +215,8 @@ public class MainController {
 		search.put("login", "Логин");
 		
 		Map<String,String> userRole = new HashMap<String,String>();
-		userRole.put("ROLE_ADMIN", "Admin");
-		userRole.put("ROLE_REGULAR_USER", "User");
+		userRole.put("ROLE_ADMIN", "Админ");
+		userRole.put("ROLE_REGULAR_USER", "Пользователь");
 		
 		List<String> userEducation = new ArrayList<String>();
 		userEducation.add("Degree");

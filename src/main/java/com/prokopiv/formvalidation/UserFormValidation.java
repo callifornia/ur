@@ -47,9 +47,11 @@ public class UserFormValidation implements Validator {
 		if (user.getUserLogin() != null && (user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40)) {
 			errors.rejectValue("userLogin", "user.err.login");
 		} 
-		if(user.getUserLogin() != null && !errors.hasFieldErrors("userLogin") && userService.userExist(user.getUserLogin())){
-			errors.rejectValue("userLogin", "user.err.login.exist");
-		} 
+		if ((auth instanceof AnonymousAuthenticationToken)){
+			if(user.getUserLogin() != null && !errors.hasFieldErrors("userLogin") && userService.userExist(user.getUserLogin())){
+				errors.rejectValue("userLogin", "user.err.login.exist");
+			} 
+		}
 		
 		if(user.getUserPassword().isEmpty()){
 			user.setUserPassword(null);

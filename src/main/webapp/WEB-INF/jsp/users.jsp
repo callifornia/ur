@@ -181,6 +181,7 @@
 	</sec:authorize>
 	<sec:authorize access="hasRole('ROLE_REGULAR_USER')">
 		<table class="table table-hover table-bordered table-striped">
+			<thead style="background-color: #596068; color: white">		
 			<tr>
 				<td>Логин</td>
 				<td>Роль</td>
@@ -189,29 +190,32 @@
 				<td>Почта</td>
 				<td>Стать</td>
 			</tr>
-			<c:forEach var="user" items="${user}">
-				<c:if test="${user.userEnable == true}">
-					<tr>
-						<td><a
-							href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
-						<c:choose>
-							<c:when test="${user.userRole == 'ROLE_ADMIN' }">
-								<td>admin</td>
-							</c:when>
-							<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
-								<td>user</td>
-							</c:when>
-							<c:otherwise>
-								<td>unknown role</td>
-							</c:otherwise>
-						</c:choose>
-						<td>${user.userlastName}</td>
-						<td>${user.userPhone }</td>
-						<td>${user.userMail}</td>
-						<td>${user.userGender}</td>
-					</tr>
-				</c:if>
-			</c:forEach>
+			</thead>
+			<tbody>
+				<c:forEach var="user" items="${user}">
+					<c:if test="${user.userEnable == true}">
+						<tr>
+							<td><a
+								href="${pageContext.request.contextPath}/user/${user.userId}">${user.userLogin}</a></td>
+							<c:choose>
+								<c:when test="${user.userRole == 'ROLE_ADMIN' }">
+									<td>admin</td>
+								</c:when>
+								<c:when test="${user.userRole == 'ROLE_REGULAR_USER' }">
+									<td>user</td>
+								</c:when>
+								<c:otherwise>
+									<td>unknown role</td>
+								</c:otherwise>
+							</c:choose>
+							<td>${user.userlastName}</td>
+							<td>${user.userPhone }</td>
+							<td>${user.userMail}</td>
+							<td>${user.userGender}</td>
+						</tr>
+					</c:if>
+				</c:forEach>
+			</tbody>
 		</table>
 	</sec:authorize>
 		<div class="pagination pagination-centered">
@@ -235,5 +239,13 @@
 		  </ul>
 		</div>
 </div>
+
+<!-- footer -->
+<div class = "navbar navbar-default navbar-fixed-bottom" id = "footer">	
+	<div class = "container">			
+		<font class = "navbar-text">© 2015 Developed by Grisha</font>	
+	</div>
+</div>
+
 </body>
 </html>
