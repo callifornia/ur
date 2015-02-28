@@ -3,25 +3,22 @@ package com.prokopiv.formvalidation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import com.prokopiv.bean.User;
 import com.prokopiv.service.UserService;
 
 @Repository
 public class UserFormValidation implements Validator {
-	
-	private static final Logger logger = LogManager.getLogger(UserFormValidation.class);
 	
 	@Autowired
 	UserService userService;
@@ -36,31 +33,31 @@ public class UserFormValidation implements Validator {
 		User user = (User) target;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		if((auth instanceof AnonymousAuthenticationToken)){
-			user.setUserRole("ROLE_REGULAR_USER");
-		} 
-		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
 		
-		if (user.getUserLogin() != null && (user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40)) {
-			errors.rejectValue("userLogin", "user.err.login");
-		} 
-		if ((auth instanceof AnonymousAuthenticationToken)){
-			if(user.getUserLogin() != null && !errors.hasFieldErrors("userLogin") && userService.userExist(user.getUserLogin())){
-				errors.rejectValue("userLogin", "user.err.login.exist");
-			} 
+		if(auth instanceof AnonymousAuthenticationToken){
+			user.setUserRole("ROLE_REGULAR_USER");
 		}
 		
-		if(user.getUserPassword().isEmpty()){
-			user.setUserPassword(null);
-		} else if (user.getUserPassword().length() < 6	|| user.getUserPassword().length() > 40) {
-			errors.rejectValue("userPassword", "user.err.password");
-		} 
-		
-		if (user.getUserPassword() == null && user.getUserId() == null) {
-			errors.rejectValue("userPassword", "user.err.password");
+		if(user.getUserId() == null){
+			if(user.getUserLogin().isEmpty() || user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40){
+				errors.rejectValue("userLogin", "user.err.login");				
+			}
+			if (!errors.hasFieldErrors("userLogin") && userService.userExist(user.getUserLogin()) ){
+				errors.rejectValue("userLogin", "user.err.login.exist");
+			} 
+			if (user.getUserPassword().isEmpty() || user.getUserPassword().length() < 4	|| user.getUserPassword().length() > 40){
+				errors.rejectValue("userPassword", "user.err.password");
+			}
+			
+		} else{
+			if(!user.getUserPassword().isEmpty() && (user.getUserPassword().length() < 4	|| user.getUserPassword().length() > 40)){
+				errors.rejectValue("userPassword", "user.err.password");
+			} else if(user.getUserPassword().isEmpty()) {
+				user.setUserPassword(null);
+			}
 		}
 		
 		if (user.getUserlastName().isEmpty()) {
@@ -82,6 +79,7 @@ public class UserFormValidation implements Validator {
 		}
 		
 	}
+	
 	private boolean isPhoneNumberValid(String phoneNumber){  
 		String expression = "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$";
 		return isValid(phoneNumber, expression);
@@ -101,7 +99,5 @@ public class UserFormValidation implements Validator {
 			isValid = true;  
 		}  
 		return isValid;  
-	}
-	
-	
+	}	
 }

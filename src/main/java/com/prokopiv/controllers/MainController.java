@@ -92,6 +92,7 @@ public class MainController {
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(@ModelAttribute(value = "user") User user, Model model)	{
 		insertList(model);
+		model.addAttribute("search", search);
 		return "register";
 	}
 	
@@ -130,6 +131,7 @@ public class MainController {
 		if(bindingResult.hasErrors()){
 			insertList(model);
 			model.addAttribute("user", user);
+			model.addAttribute("search", search);
 			return "register";
 		} else {
 			redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");

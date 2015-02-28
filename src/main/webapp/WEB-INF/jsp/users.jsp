@@ -87,8 +87,9 @@
 		<tbody>
 		<c:if test="${empty user}">
 				<tr>
-					<td colspan="9" style = "padding-top: 100px;">
-						<img alt="" src="<c:url value='/resources/img/nothink.png' />">
+					<td colspan="9" style = "padding-top: 50px;">
+						<p align="center"  class = "search-empty-result">По данному запросу нет результатов</p>
+						<p align="center"  class = "search-empty-result-small">(попробуйте изменить параметры поиска)</p>
 					</td>
 				</tr>
 			</c:if>

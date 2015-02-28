@@ -122,10 +122,29 @@ body{
 #edit-user-mail-input{
 	margin-top: -7px;
 }
+.search-empty-result{
+	font-size: 26px;
+	color: #6e6f70;
+}
+.search-empty-result-small{
+	font-size: 16px;
+	color: #6e6f70;
+	margin-bottom: 50px;
+}
 #edit-user-error-password{
 	color: #ff0000;
 	font-size: 12px;
 	margin-left: 85px;
+}
+#edit-user-error-role{
+	color: #ff0000;
+	font-size: 12px;
+	margin-left: 25px;
+}
+#edit-user-error-education{
+	color: #ff0000;
+	font-size: 12px;
+	margin-left: 12px;
 }
 #edit-user-error-mail{
 	color: #ff0000;
@@ -152,6 +171,13 @@ body{
 	color: #484848;
 	float: left;
 	margin-right: 74px;
+	margin-top: 5px;
+}
+.register-user-id-text{
+	font-size: 16px;
+	color: #484848;
+	float: left;
+	margin-right: 31px;
 	margin-top: 5px;
 }
 .user-table td{
