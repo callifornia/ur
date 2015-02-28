@@ -104,7 +104,6 @@ public class MainController {
 	@RequestMapping(value = "/inserted", method = RequestMethod.POST)
 	public String insertAnonimus(@Validated User user, BindingResult bindingResult, Model model)	{
 		if(bindingResult.hasErrors()){
-//			insertList(model);
 			model.addAttribute("user", user);
 			return "login";
 		} else {
@@ -141,7 +140,6 @@ public class MainController {
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(@ModelAttribute(value="user") @Validated User user,
-//						@ModelAttribute(value = "search") Search searchRequest,
 						BindingResult bindingResult, 
 						Model model, 
 						RedirectAttributes redirectAttribute){
