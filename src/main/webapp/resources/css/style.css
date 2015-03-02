@@ -20,6 +20,9 @@ body{
 	margin-top: 10px;
 	margin-bottom: 25px;
 }
+#users-icon-exit-user{
+	margin-top: 7px;
+}
 #user-edit-button{
 	margin-right: 10px;
 	margin-left: 100px;

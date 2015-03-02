@@ -33,10 +33,15 @@
 		  						<a href="${pageContext.request.contextPath}/register" class = "users-search-links" >
 		  							<img src="<c:url value='/resources/img/add-user-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/add-user-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/add-user-icon.png' />'" border = "0">
 		  						</a>
-							</sec:authorize>
-							<a href="${pageContext.request.contextPath}/logout">
+		  						<a href="${pageContext.request.contextPath}/logout">
 								<img src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0">
 							</a>
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_REGULAR_USER')">
+		  					<a href="${pageContext.request.contextPath}/logout">
+								<img align="right"  id = "users-icon-exit-user" src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0">
+							</a>
+							</sec:authorize>
 						</div>				 
 					</form:form>
 				</div>
@@ -47,7 +52,9 @@
 	<div class = "container">
 		<div class = "row">
 			<div class = "span4">
-				<div id = "search-show-message">
+				<div id = "search-show-message">				
+				<sec:authorize access="isRememberMe()">with a remember me </sec:authorize>
+				<sec:authorize access="isFullyAuthenticated()">fully login/password</sec:authorize>
 					<sec:authorize access="hasRole('ROLE_ADMIN')">
 						<c:choose>
 							<c:when test="${not empty success}">
@@ -195,6 +202,14 @@
 				</tr>
 				</thead>
 				<tbody>
+				<c:if test="${empty user}">
+					<tr>
+						<td colspan="6" style = "padding-top: 50px;">
+							<p align="center"  class = "search-empty-result">По данному запросу нет результатов</p>
+							<p align="center"  class = "search-empty-result-small">(попробуйте изменить параметры поиска)</p>
+						</td>
+					</tr>
+				</c:if>
 					<c:forEach var="user" items="${user}">
 						<c:if test="${user.userEnable == true}">
 							<tr>

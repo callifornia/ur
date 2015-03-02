@@ -15,7 +15,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(){
-		return "redirect:/login";
+		return "redirect:/users";
 	}
 
 	@RequestMapping(value = "/login")

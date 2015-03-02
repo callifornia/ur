@@ -109,9 +109,7 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			e.printStackTrace();
 		}
 		return true;
-	}
-	
-	
+	}	
 	
 	private boolean uploadDataToUserRole(){
 		String insertUserRoleSql = "INSERT INTO user_role (role_id, role_name) VALUES (?,?);";
@@ -130,9 +128,7 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			
 		}
 		return true;
-	}
-	
-	
+	}	
 	
 	@Override
 	public boolean createTables() {
@@ -141,7 +137,9 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 		String dropTableUserAuthenticationSql = "DROP TABLE IF EXISTS user_authentication;";
 		String dropTableUserAuthorizationSql = "DROP TABLE IF EXISTS user_authorization;";
 		String dropTableUserGeneralSql = "DROP TABLE IF EXISTS user_general;";
+		String dropTablePersistentSql = "DROP TABLE IF EXISTS persistent_logins;";
 		
+		String createPesistentSql = "CREATE TABLE persistent_logins (username VARCHAR(64) NOT NULL, series VARCHAR(64) NOT NULL, token VARCHAR(64) NOT NULL, last_used TIMESTAMP NOT NULL, PRIMARY KEY (series));";
 		String createUserRoleSql = "CREATE TABLE user_role (ROLE_ID INT NOT NULL, ROLE_NAME VARCHAR(45) NOT NULL, PRIMARY KEY (ROLE_ID), UNIQUE INDEX ROLE_NAME_UNIQUE (ROLE_NAME ASC));"; 
 		String createUserAuthenticationSql = "CREATE TABLE user_authentication (USER_ID INT NOT NULL AUTO_INCREMENT, USER_NAME VARCHAR(50) NOT NULL, USER_PASSWORD VARCHAR(60) NOT NULL, USER_ENABLE TINYINT(1) NOT NULL DEFAULT 1, PRIMARY KEY (USER_ID), UNIQUE INDEX USER_NAME_UNIQUE (USER_NAME ASC));";
 		String createUserAuthorizationSql = "CREATE TABLE user_authorization ( USER_ID INT NOT NULL, ROLE_ID INT NOT NULL, PRIMARY KEY (USER_ID, ROLE_ID));";
@@ -153,12 +151,13 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			ps.addBatch(dropTableUserGeneralSql);
 			ps.addBatch(dropTableUserAuthorizationSql);
 			ps.addBatch(dropTableUserAuthenticationSql);
+			ps.addBatch(dropTablePersistentSql);
 			
 			ps.addBatch(createUserRoleSql);
 			ps.addBatch(createUserAuthorizationSql);
 			ps.addBatch(createUserAuthenticationSql);
 			ps.addBatch(createUserGeneralSql);
-
+			ps.addBatch(createPesistentSql);
 			ps.executeBatch();	
 			connection.commit();
 			result = !result;

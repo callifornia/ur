@@ -36,7 +36,7 @@
 		  						</a>
 							</sec:authorize>
 							<a href="${pageContext.request.contextPath}/logout">
-								<img src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0" alt = "">
+								<img  id = "users-icon-exit-user" align="right" src="<c:url value='/resources/img/logout-icon.png' />" onmouseover = "this.src='<c:url value='/resources/img/logout-icon-hover.png' />'" onmouseout = "this.src = '<c:url value='/resources/img/logout-icon.png' />'" border = "0" alt = "">
 							</a>
 						</div>				 
 					</form:form>
