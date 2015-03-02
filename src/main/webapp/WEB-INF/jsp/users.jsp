@@ -53,8 +53,6 @@
 		<div class = "row">
 			<div class = "span4">
 				<div id = "search-show-message">				
-				<sec:authorize access="isRememberMe()">with a remember me </sec:authorize>
-				<sec:authorize access="isFullyAuthenticated()">fully login/password</sec:authorize>
 					<sec:authorize access="hasRole('ROLE_ADMIN')">
 						<c:choose>
 							<c:when test="${not empty success}">

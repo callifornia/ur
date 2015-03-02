@@ -38,4 +38,13 @@ public class LoginController {
 		model.addAttribute("message", "You dont have permition to enterr this page");
 		return "403";
 	}
+	
+	@RequestMapping(value = "/check", method = RequestMethod.GET)
+	public String chck(Model model) throws Exception{
+		try{
+			throw new Exception(); 
+		} catch(Exception e){
+			return "404";
+		}
+	}
 }
