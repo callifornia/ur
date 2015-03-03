@@ -4,7 +4,9 @@
 2. В футере на главной странице ссылка 	"Инициализировать таблици" создает необходимые таблицы и наполняет их данными (по умолчанию логин и пароль одинаковы(к примеру логин: admin_0, пароль: admin_0) начиная от admin_0 заканчивая admin_99 с ролью "админ", и user_101 заканчивая user_199 с ролью "user")
 3. При необходимости можно пересоздать таблицы и перезаполнить их данными.
 
-<a href='http://postimg.org/image/8oqnwa3wn/' target='_blank'><img src='http://s7.postimg.org/8oqnwa3wn/image.jpg' border='0' alt="Без имени 2" /></a>
+<a href='http://postimage.org/' target='_blank'><img src='http://s7.postimg.org/ecwyn6897/image.jpg' border='0' alt="Без имени 2" /></a><br /><a target='_blank' href='http://postimage.org/index.php?lang=russian'>хостинг изображений</a><br /><br />
+
+
 
 Проект має представляти собою серверний додаток який взаємодіє з БД. 
 При звертанні по URL користувач потрапляє на сторінку авторизації.
