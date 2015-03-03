@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.insertUser(user);
 		} catch (SQLException e){
+			
 			e.printStackTrace();
 		}
 	}
