@@ -1,14 +1,7 @@
 package com.prokopiv.controllers;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -48,59 +41,52 @@ public class MainController {
 	@Autowired Pagination pagination;
 	@Autowired @Qualifier("authMgr") private AuthenticationManager authMgr;
 	@Autowired private UserDetailsService userDetailsSvc;
+	@Autowired CustomDateEditor custom;
 	
-	private static Logger logger = LogManager.getLogger(LoginController.class);
-
+	//setValidator for Search attribute
 	@InitBinder(value = "search")
 	private void initSearchBinder(WebDataBinder dataBinder){
 		dataBinder.setValidator(searchValidator);
 	}
 	
+	//setValidator for user attribute
 	@InitBinder(value = "user")
 	private void initUserBinder(WebDataBinder dataBinder){
 		dataBinder.setValidator(userFormValidation);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		CustomDateEditor custom = new CustomDateEditor(dateFormat, true);
 		dataBinder.registerCustomEditor(Date.class, custom);
 	}
 	
+	// mapping inititalization tables and inserted data request
 	@RequestMapping(value = "/initializeTables", method = RequestMethod.GET)
 	public String initializeTables(Model model){
 		userService.initializationDataBase();
 		return "redirect:/login";
 	}
 	
-	
+	// get user for user id
 	@RequestMapping(value = "/user/{id}")
 	public String user(@PathVariable(value = "id") String id,  Model model){
-		model.addAttribute("search", search);
-		model.addAttribute("user", userService.getUserById(id));
+		userService.setUserAndSearchAttributes(model, userService.getUserById(id), search);
 		return "user";
 	}
 	
+	//recovery user after delete
 	@RequestMapping(value = "/recovery/{id}", method = RequestMethod.GET)
 	public String recovery(@PathVariable(value  = "id") String id, Model model, RedirectAttributes redirectAttribute){
-		if (userService.recoveryUser(id)){
-			redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
-		} else {
-			redirectAttribute.addFlashAttribute("success", "Не получилось");
-		}
+		userService.recoveryUser(id);
+		redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
 		return "redirect:/users";
 	}
 	
+	//rendering register.jsp who has admin role
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String register(@ModelAttribute(value = "user") User user, Model model)	{
-		insertList(model);
+		userService.setFormList(model);
 		model.addAttribute("search", search);
 		return "register";
 	}
 	
-	@RequestMapping(value = "/registered", method = RequestMethod.GET)
-	public String registerAnonimus(@ModelAttribute(value = "user") User user, Model model)	{
-		insertList(model);
-		return "registered";
-	}
-	
+	// inserted new user from login page
 	@RequestMapping(value = "/inserted", method = RequestMethod.POST)
 	public String insertAnonimus(@Validated User user, BindingResult bindingResult, Model model)	{
 		if(bindingResult.hasErrors()){
@@ -108,6 +94,7 @@ public class MainController {
 			return "login";
 		} else {
 			userService.insertUser(user);
+			// redirect user to the users jsp after successful registration
 			try {
 				UserDetails userDetail = userDetailsSvc.loadUserByUsername(user.getUserLogin());
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetail, user.getUserPassword(), userDetail.getAuthorities());
@@ -117,19 +104,18 @@ public class MainController {
 					return "redirect:/users";
 				}
 			} catch(Exception e){
-				logger.info("beeeeeeeeeeeeeeeeeeee");
+				e.printStackTrace();
 			}
-			logger.info("redirect to login page");
 			return "redirect:/login";
 		}
 	}
 	
+	//insert user in to db by admin
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public String insert(@Validated User user,BindingResult bindingResult, Model model, RedirectAttributes redirectAttribute)	{
 		if(bindingResult.hasErrors()){
-			insertList(model);
-			model.addAttribute("user", user);
-			model.addAttribute("search", search);
+			userService.setFormList(model);
+			userService.setUserAndSearchAttributes(model, user, search);
 			return "register";
 		} else {
 			redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");
@@ -138,6 +124,7 @@ public class MainController {
 		}
 	}
 	
+	// update user
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(@ModelAttribute(value="user") @Validated User user,
 						BindingResult bindingResult, 
@@ -145,9 +132,8 @@ public class MainController {
 						RedirectAttributes redirectAttribute){
 		
 		if(bindingResult.hasErrors()){
-			model.addAttribute("search", search);
-			model.addAttribute("user", user);
-			insertList(model);
+			userService.setUserAndSearchAttributes(model, user, search);
+			userService.setFormList(model);
 			return "edit";
 		} else {
 			userService.updateUser(user);
@@ -155,10 +141,10 @@ public class MainController {
 			return "redirect:/users";
 		}
 	}
-
+	// rendering edit page
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String edit(@PathVariable("id") String id, Model model){
-		insertList(model);
+		userService.setFormList(model);
 		model.addAttribute("search", search);
 		if(model.containsAttribute("user")){
 			return "edit";
@@ -169,62 +155,35 @@ public class MainController {
 		}
 	}
 	
+	// search request
 	@RequestMapping(value = "/searchRequest", method = RequestMethod.POST) 
 	public String userSearch(Model model, @ModelAttribute(value = "search") Search searchRequest, RedirectAttributes redirectAttribute){
 		search = searchRequest;
 		return "redirect:/users/1";
 	} 
-	 
+	
+	// rendering users.jsp with a users list, also set pagination for navigation
 	@RequestMapping (value = "/users/{page}", method = RequestMethod.GET) 
 	public String usersPage(@PathVariable (value = "page") Integer page, Model model){
 		pagination.setCurrentPage(page);
 		model.addAttribute("pagi", pagination);
-		model.addAttribute("search", search);
-		model.addAttribute("user", userService.getUserBySearch(search, pagination));
+		userService.setUserAndSearchAttributes(model, userService.getUserBySearch(search, pagination), search);
 		return "users";
 	} 
 	
+	// main page (users.jsp) after successful user login or registered
 	@RequestMapping(value = "/users")
 	public String users(Model model){
 		pagination.setCurrentPage(1);
 		model.addAttribute("pagi", pagination);
-		model.addAttribute("search", search);
-		model.addAttribute("user", userService.getUserList(pagination));
+		userService.setUserAndSearchAttributes(model, userService.getUserList(pagination), search);
 		return "users";
 	}
-		
-
+	// delete user by id (set enable to false in db)
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
 		redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
 		userService.deleteUser(id);
 		return "redirect:/users";
-	}
-	
-	private void insertList(Model model){
-		List<String> userGender = new ArrayList<String>(); 
-		userGender.add("Male");
-		userGender.add("Female");		
-		
-		Map<String, String> search = new HashMap<String,String>();
-		
-		search.put("all", "all");
-		search.put("phone", "Телефон");
-		search.put("lastName", "ФИО");
-		search.put("login", "Логин");
-		
-		Map<String,String> userRole = new HashMap<String,String>();
-		userRole.put("ROLE_ADMIN", "Админ");
-		userRole.put("ROLE_REGULAR_USER", "Пользователь");
-		
-		List<String> userEducation = new ArrayList<String>();
-		userEducation.add("Degree");
-		userEducation.add("Master Degree");
-		userEducation.add("Other");
-		
-		model.addAttribute("searchName", search);
-		model.addAttribute("roles", userRole);
-		model.addAttribute("genders", userGender);
-		model.addAttribute("education", userEducation);
-	}
+	}	
 }

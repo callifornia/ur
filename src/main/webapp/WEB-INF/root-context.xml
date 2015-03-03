@@ -24,11 +24,14 @@
 
 	<bean class = "com.prokopiv.bean.User"/>
 	<bean class = "com.prokopiv.bean.Search"/>
-
- 	<!-- <bean id="savedRequestAwareAuthenticationSuccessHandler"
-		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-		<property name="targetUrlParameter" value="targetUrl" />
-  </bean> -->
+	
+	<bean id = "dateFormat" class = "java.text.SimpleDateFormat">
+		<constructor-arg value="dd-MM-yyyy" />
+	</bean>
+	<bean class = "org.springframework.beans.propertyeditors.CustomDateEditor">
+		<constructor-arg ref="dateFormat" />
+		<constructor-arg value = "true" />	
+	</bean>
 
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/" />
@@ -57,8 +60,7 @@
 	</bean>
 	
 	<bean class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-	<bean class = "com.prokopiv.formvalidation.Pagination" />
-	
+	<bean class = "com.prokopiv.formvalidation.Pagination" />	
 	<bean class = "com.prokopiv.formvalidation.SearchFormValidator" />
 	
 </beans>

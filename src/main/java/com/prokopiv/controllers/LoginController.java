@@ -35,7 +35,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
 	public String accessDenied(ModelMap model){
-		model.addAttribute("message", "You dont have permition to enterr this page");
+		model.addAttribute("message", "You dont have permition to enter this page");
 		return "403";
 	}
 	

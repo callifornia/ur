@@ -30,15 +30,18 @@ public class UserFormValidation implements Validator {
 	public void validate(Object target, Errors errors) {
 		User user = (User) target;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
 		
+		// set "user" role for new users
 		if(auth instanceof AnonymousAuthenticationToken){
 			user.setUserRole("ROLE_REGULAR_USER");
 		}
 		
+		// validate checkbox 
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userRole","user.err.role");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userGender", "user.err.gender");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEducation", "user.err.education");
+		
+		// user registering by admin or its a new user from login page.
 		if(user.getUserId() == null){
 			if(user.getUserLogin().isEmpty() || user.getUserLogin().length() < 4 || user.getUserLogin().length() > 40){
 				errors.rejectValue("userLogin", "user.err.login");				
@@ -78,11 +81,13 @@ public class UserFormValidation implements Validator {
 		
 	}
 	
+	//validating phone
 	private boolean isPhoneNumberValid(String phoneNumber){  
 		String expression = "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$";
 		return isValid(phoneNumber, expression);
 	}
 	
+	//validating eMail
 	private boolean isEmailValid(String email) {
 		String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
 		return isValid(email, expression);

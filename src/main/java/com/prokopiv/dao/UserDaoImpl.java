@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -30,8 +32,7 @@ public class UserDaoImpl implements UserDao {
 	Pagination pagination;
 	
 	@Override
-	public boolean recoveryUser(String id) {
-		boolean result = false;
+	public void recoveryUser(String id) {
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
 			String sql = "UPDATE user_authentication SET user_enable = true WHERE user_id = ?";
@@ -41,13 +42,14 @@ public class UserDaoImpl implements UserDao {
 				ps.executeUpdate();
 			} catch(SQLException e){
 				connection.rollback();
+				connection.setAutoCommit(true);
+				throw e;
 			}
 			connection.commit();
-			result = !result;
+			connection.setAutoCommit(true);
 		} catch(SQLException e){
 			e.printStackTrace();
 		}		
-		return result;
 	}
 	
 	@Override
@@ -233,8 +235,7 @@ public class UserDaoImpl implements UserDao {
 
 	
 	@Override
-	public boolean insertUser(User user) {
-		boolean result = false;		
+	public void insertUser(User user) throws SQLException {
 		String userAuthenticationSql = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, ?);";
 		String userAuthorizationSql = "INSERT INTO user_authorization (user_id, role_id) VALUES (?,?);";
 		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
@@ -253,13 +254,16 @@ public class UserDaoImpl implements UserDao {
 				ps.executeUpdate();
 				ResultSet res = ps.getGeneratedKeys();
 				res.next();
-				genId = res.getInt(1);				
+				genId = res.getInt(1);
+				if(true){
+					throw new SQLException()	;
+				}
 			} catch(SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(true);
+				throw e;
 			}
-			try (PreparedStatement ps = connection.prepareStatement(userAuthorizationSql)){
-				
+			try (PreparedStatement ps = connection.prepareStatement(userAuthorizationSql)){				
 				if(!"role_admin".equalsIgnoreCase(user.getUserRole())){
 					role = UserRole.ROLE_REGULAR_USER;
 				}
@@ -267,8 +271,9 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(2, role);
 				ps.executeUpdate();
 			} catch(SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(false);
+				throw e;
 			}
 			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
 				ps.setInt(1, genId);
@@ -282,21 +287,18 @@ public class UserDaoImpl implements UserDao {
 				ps.setString(9, user.getUserDescription());
 				ps.executeUpdate();
 			} catch(SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(false);
+				throw e;
 			}		
 			connection.commit();
-			result = !result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return result;
 	}
 	
-	
 	@Override
-	public boolean updateUser(User user) {
-		boolean result = false;
+	public void updateUser(User user) {
 		String userAuthorizationSql  = "UPDATE user_authorization SET role_id = ? WHERE user_id = ?";
 		String userGeneralSql = "UPDATE user_general SET user_fio = ?, user_phone = ?, user_mail = ?, user_adress = ?, user_gender = ?, user_birthday = ?, user_education = ?, user_description = ? WHERE user_id = ?";
 		
@@ -312,8 +314,9 @@ public class UserDaoImpl implements UserDao {
 					ps.setInt(2, userId);
 					ps.executeUpdate();
 				} catch (SQLException e){
-					e.printStackTrace();
 					connection.rollback();
+					connection.setAutoCommit(true);
+					throw e;
 				}
 			}
 			
@@ -326,8 +329,9 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(2, userId);
 				ps.executeUpdate();
 			} catch(SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(true);
+				throw e;
 			}
 			
 			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
@@ -342,20 +346,18 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(9, userId);
 				ps.executeUpdate();
 			} catch(SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(true);
+				throw e;
 			}
 			connection.commit();
-			result = !result;
 		} catch(SQLException e){
 			e.printStackTrace();
 		}
-		return result;
 	}
 
 	@Override
-	public boolean deleteUser(String id) {
-		boolean result = false;
+	public void deleteUser(String id) {
 		String sql = "UPDATE user_authentication SET user_enable = false WHERE user_id = ?";
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
@@ -364,15 +366,14 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(1, userId);
 				ps.executeUpdate();
 			} catch (SQLException e){
-				e.printStackTrace();
 				connection.rollback();
+				connection.setAutoCommit(true);
+				throw e;
 			}
 			connection.commit();
-			result = !result;
 		} catch(SQLException e){
 			e.printStackTrace();
 		}
-		return result;
 	}
 
 	private java.sql.Date convertToSqlDate(java.util.Date date){
