@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void insertUser(User user) {
 		try{
+			
 			userDao.insertUser(user);
 		} catch (SQLException e){
 			
