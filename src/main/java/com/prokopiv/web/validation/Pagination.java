@@ -1,4 +1,4 @@
-package com.prokopiv.formvalidation;
+package com.prokopiv.web.validation;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.prokopiv.dao;
+package com.prokopiv.web.dao;
 
 public final class UserRole {
 	

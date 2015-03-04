@@ -1,4 +1,4 @@
-package com.prokopiv.controllers;
+package com.prokopiv.web.controllers;
 
 import java.util.Date;
 
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.prokopiv.bean.Search;
-import com.prokopiv.bean.User;
-import com.prokopiv.formvalidation.Pagination;
-import com.prokopiv.formvalidation.SearchFormValidator;
-import com.prokopiv.formvalidation.UserFormValidation;
-import com.prokopiv.service.UserService;
+import com.prokopiv.web.model.Search;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.service.UserService;
+import com.prokopiv.web.validation.Pagination;
+import com.prokopiv.web.validation.SearchFormValidator;
+import com.prokopiv.web.validation.UserFormValidation;
 
 @Controller
 public class MainController {

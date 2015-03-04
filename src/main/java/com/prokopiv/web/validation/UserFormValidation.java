@@ -1,4 +1,4 @@
-package com.prokopiv.formvalidation;
+package com.prokopiv.web.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,8 +12,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.prokopiv.bean.User;
-import com.prokopiv.service.UserService;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.service.UserService;
 
 @Repository
 public class UserFormValidation implements Validator {

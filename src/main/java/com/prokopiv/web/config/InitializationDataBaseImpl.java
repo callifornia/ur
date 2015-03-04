@@ -1,4 +1,4 @@
-package com.prokopiv.initialization;
+package com.prokopiv.web.config;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import com.prokopiv.dao.UserRole;
+import com.prokopiv.web.dao.UserRole;
 
 @Repository
 public class InitializationDataBaseImpl implements InitializationDataBase {

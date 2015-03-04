@@ -22,8 +22,8 @@
 		</bean>	
 	</mvc:interceptors> 
 
-	<bean class = "com.prokopiv.bean.User"/>
-	<bean class = "com.prokopiv.bean.Search"/>
+	<bean class = "com.prokopiv.web.model.User"/>
+	<bean class = "com.prokopiv.web.model.Search"/>
 	
 	<bean id = "dateFormat" class = "java.text.SimpleDateFormat">
 		<constructor-arg value="dd-MM-yyyy" />
@@ -60,7 +60,7 @@
 	</bean>
 	
 	<bean class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-	<bean class = "com.prokopiv.formvalidation.Pagination" />	
-	<bean class = "com.prokopiv.formvalidation.SearchFormValidator" />
+	<bean class = "com.prokopiv.web.validation.Pagination" />	
+	<bean class = "com.prokopiv.web.validation.SearchFormValidator" />
 	
 </beans>

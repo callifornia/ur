@@ -1,4 +1,4 @@
-package com.prokopiv.service;
+package com.prokopiv.web.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -6,18 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.prokopiv.bean.Search;
-import com.prokopiv.bean.User;
-import com.prokopiv.dao.UserDao;
-import com.prokopiv.formvalidation.Pagination;
-import com.prokopiv.initialization.InitializationDataBaseImpl;
+import com.prokopiv.web.config.InitializationDataBaseImpl;
+import com.prokopiv.web.dao.UserDao;
+import com.prokopiv.web.exception.DataBaseException;
+import com.prokopiv.web.model.Search;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.validation.Pagination;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
+	private static Logger logger = LogManager.getLogger(UserServiceImpl.class);
 	
 	@Autowired
 	UserDao userDao;
@@ -46,7 +51,8 @@ public class UserServiceImpl implements UserService {
 	public void recoveryUser(String id) {
 		try{
 			userDao.recoveryUser(id);
-		} catch(SQLException e){
+		} catch(DataBaseException e){
+			logger.warn("Can't recovery user with id: " + id, e);
 			
 		}
 	}

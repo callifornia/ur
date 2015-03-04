@@ -1,14 +1,15 @@
-package com.prokopiv.dao;
+package com.prokopiv.web.dao;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import com.prokopiv.bean.User;
-import com.prokopiv.formvalidation.Pagination;
+import com.prokopiv.web.exception.DataBaseException;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.validation.Pagination;
 
 public interface UserDao {
 	
-	public void recoveryUser(String id) throws SQLException;
+	public void recoveryUser(String id) throws DataBaseException;
 	public boolean userExist(String login);
 
 	public User getUserById(String id);

@@ -1,4 +1,4 @@
-package com.prokopiv.bean;
+package com.prokopiv.web.model;
 
 import java.util.Date;
 

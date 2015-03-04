@@ -1,4 +1,4 @@
-package com.prokopiv.initialization;
+package com.prokopiv.web.config;
 
 public interface InitializationDataBase {
 	

@@ -1,4 +1,4 @@
-package com.prokopiv.dao;
+package com.prokopiv.web.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,14 +10,13 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import com.prokopiv.bean.User;
-import com.prokopiv.formvalidation.Pagination;
+import com.prokopiv.web.exception.DataBaseException;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.validation.Pagination;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -32,10 +31,10 @@ public class UserDaoImpl implements UserDao {
 	Pagination pagination;
 	
 	@Override
-	public void recoveryUser(String id) throws SQLException {
+	public void recoveryUser(String id) throws DataBaseException {
+		String sql = "UPDATE user_authentication SET user_enable = true WHERE user_id = ?";
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
-			String sql = "UPDATE user_authentication SET user_enable = true WHERE user_id = ?";
 			try(PreparedStatement ps = connection.prepareStatement(sql)){
 				Integer userId = Integer.valueOf(id);
 				ps.setInt(1, userId);
@@ -47,8 +46,8 @@ public class UserDaoImpl implements UserDao {
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
-		} catch(SQLException e){
-			throw e;
+		} catch(Exception e){				
+			throw  new DataBaseException(e, "Can't update user_authentiocation table. SQL Query: " + sql);
 		}		
 	}
 	

@@ -1,9 +1,9 @@
-package com.prokopiv.formvalidation;
+package com.prokopiv.web.validation;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.prokopiv.bean.Search;
+import com.prokopiv.web.model.Search;
 
 
 public class SearchFormValidator implements Validator{

@@ -1,12 +1,12 @@
-package com.prokopiv.service;
+package com.prokopiv.web.service;
 
 import java.util.List;
 
 import org.springframework.ui.Model;
 
-import com.prokopiv.bean.Search;
-import com.prokopiv.bean.User;
-import com.prokopiv.formvalidation.Pagination;
+import com.prokopiv.web.model.Search;
+import com.prokopiv.web.model.User;
+import com.prokopiv.web.validation.Pagination;
 
 public interface UserService {
 	
