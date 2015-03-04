@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
 	Pagination pagination;
 	
 	@Override
-	public void recoveryUser(String id) {
+	public void recoveryUser(String id) throws SQLException {
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
 			String sql = "UPDATE user_authentication SET user_enable = true WHERE user_id = ?";
@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
 			connection.commit();
 			connection.setAutoCommit(true);
 		} catch(SQLException e){
-			e.printStackTrace();
+			throw e;
 		}		
 	}
 	
@@ -255,9 +255,6 @@ public class UserDaoImpl implements UserDao {
 				ResultSet res = ps.getGeneratedKeys();
 				res.next();
 				genId = res.getInt(1);
-				if(true){
-					throw new SQLException()	;
-				}
 			} catch(SQLException e){
 				connection.rollback();
 				connection.setAutoCommit(true);
@@ -272,7 +269,7 @@ public class UserDaoImpl implements UserDao {
 				ps.executeUpdate();
 			} catch(SQLException e){
 				connection.rollback();
-				connection.setAutoCommit(false);
+				connection.setAutoCommit(true);
 				throw e;
 			}
 			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
@@ -288,7 +285,7 @@ public class UserDaoImpl implements UserDao {
 				ps.executeUpdate();
 			} catch(SQLException e){
 				connection.rollback();
-				connection.setAutoCommit(false);
+				connection.setAutoCommit(true);
 				throw e;
 			}		
 			connection.commit();

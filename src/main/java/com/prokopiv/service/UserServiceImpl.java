@@ -44,7 +44,11 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void recoveryUser(String id) {
-		userDao.recoveryUser(id);
+		try{
+			userDao.recoveryUser(id);
+		} catch(SQLException e){
+			
+		}
 	}
 
 	@Override

@@ -107,7 +107,7 @@
 	<div class = "container">			
 			
 		<font class = "navbar-text">© 2015 Developed by Grisha</font>	
-		<a href="${pageContext.request.contextPath}/initializeTables"> Инициализировать таблици </a>	
+		<a href="${pageContext.request.contextPath}/initializeTables"> Инициализировать таблицы </a>	
 		<a href="${pageContext.request.contextPath}/check"> throw Exception() </a>	
 	</div>
 </div>

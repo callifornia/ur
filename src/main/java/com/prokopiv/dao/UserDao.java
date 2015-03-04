@@ -8,7 +8,7 @@ import com.prokopiv.formvalidation.Pagination;
 
 public interface UserDao {
 	
-	public void recoveryUser(String id);
+	public void recoveryUser(String id) throws SQLException;
 	public boolean userExist(String login);
 
 	public User getUserById(String id);
