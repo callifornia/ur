@@ -51,7 +51,7 @@
 	<!-- body-->
 	<div class = "container">
 		<div class = "row">
-			<div class = "span4">
+			<div class = "span5">
 				<div id = "search-show-message">				
 					<sec:authorize access="hasRole('ROLE_ADMIN')">
 						<c:choose>
@@ -59,7 +59,12 @@
 								<div id = "show" class="alert alert-success">
 									${success}	
 								</div>
-							</c:when>								
+							</c:when>	
+							<c:when test="${not empty error}">
+								<div id = "show" class="alert alert-error">
+									${error}	
+								</div>
+							</c:when>							
 							<c:otherwise>
 								&nbsp 
 							</c:otherwise>

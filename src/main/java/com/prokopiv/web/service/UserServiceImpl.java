@@ -48,13 +48,14 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void recoveryUser(String id) {
+	public boolean recoveryUser(String id) {
 		try{
 			userDao.recoveryUser(id);
 		} catch(DataBaseException e){
 			logger.warn("Can't recovery user with id: " + id, e);
-			
+			return false;
 		}
+		return true;
 	}
 
 	@Override

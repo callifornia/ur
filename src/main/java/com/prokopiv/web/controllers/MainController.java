@@ -74,8 +74,11 @@ public class MainController {
 	//recovery user after delete
 	@RequestMapping(value = "/recovery/{id}", method = RequestMethod.GET)
 	public String recovery(@PathVariable(value  = "id") String id, Model model, RedirectAttributes redirectAttribute){
-		userService.recoveryUser(id);
-		redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
+		if(userService.recoveryUser(id)){
+			redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
+		} else{
+			redirectAttribute.addFlashAttribute("error", "Не удалось воскресить польхователя(смотри лог)");
+		};
 		return "redirect:/users";
 	}
 	

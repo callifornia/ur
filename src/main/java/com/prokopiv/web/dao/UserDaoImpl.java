@@ -21,14 +21,11 @@ import com.prokopiv.web.validation.Pagination;
 @Repository
 public class UserDaoImpl implements UserDao {
 	
-	@Autowired
-	DataSource dataSource;		
+	@Autowired DataSource dataSource;		
 	
-	@Autowired
-	BCryptPasswordEncoder encoder;
+	@Autowired BCryptPasswordEncoder encoder;
 	
-	@Autowired
-	Pagination pagination;
+	@Autowired Pagination pagination;
 	
 	@Override
 	public void recoveryUser(String id) throws DataBaseException {
@@ -46,8 +43,8 @@ public class UserDaoImpl implements UserDao {
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
-		} catch(Exception e){				
-			throw  new DataBaseException(e, "Can't update user_authentiocation table. SQL Query: " + sql);
+		} catch(Exception ex){				
+			throw new DataBaseException("Can't update user_authentiocation table. SQL Query: " + sql, ex);
 		}		
 	}
 	

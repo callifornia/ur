@@ -17,7 +17,7 @@ public interface UserService {
 	public List<User> getUserBySearch(Search search, Pagination pagination);
 	public List<User> getUserList(Pagination pagination);
 
-	public void recoveryUser(String id);
+	public boolean recoveryUser(String id);
 	public void insertUser(User user);
 	public void updateUser(User user);
 	public void deleteUser(String id);

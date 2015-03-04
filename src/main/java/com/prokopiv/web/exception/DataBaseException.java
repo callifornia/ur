@@ -3,14 +3,23 @@ package com.prokopiv.web.exception;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-public class DataBaseException extends Exception {	
+
+public class DataBaseException extends ApplicationException {	
 	
 	private static final long serialVersionUID = 5878696000000832683L;
-	private static final Logger logger = LogManager.getLogger(DataBaseException.class);
+	private static final Logger logger = LogManager.getLogger(ApplicationException.class);
+
 	
-	public DataBaseException(Exception exception, String message) {
-		logger.warn(message, exception);
+	public DataBaseException() {
+		super();
 	}
 	
+	public DataBaseException(String message){
+		super(message, new Exception());
+	}
+	public DataBaseException(String message, Exception exception) {
+		super(message, exception);
+		logger.warn(message, exception);
+	}
 
 }
