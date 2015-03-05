@@ -15,124 +15,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.prokopiv.web.dao.UserRole;
+import com.prokopiv.web.exception.DataBaseException;
 
 @Repository
 public class InitializationDataBaseImpl implements InitializationDataBase {
 	
-	@Autowired
-	DataSource dataSource;
+	@Autowired DataSource dataSource;
 	
-	@Autowired
-	BCryptPasswordEncoder encoder;
+	@Autowired BCryptPasswordEncoder encoder;
 	
 	private List<Integer> userIdList = new ArrayList<Integer>(100);
 	private static final int NUMBER_ADMINS_IN_DB = 100;
 	private static final int NUMBER_USERS_IN_DB = 100;
 	private static final int NUMBER_ALL_USERS_IN_DB = NUMBER_ADMINS_IN_DB + NUMBER_USERS_IN_DB;
 	
-	@Override
-	public boolean uploadData(){	
-		uploadDataToUserRole();		
-		uploadDataToUserAuthentication();
-		uploadDataToUserAuthorization();
-		uploadDataToUserGeneral();
-		return true;
+	
+	public void uploadData() throws DataBaseException{	
+			uploadDataToUserRole();		
+			uploadDataToUserAuthentication();
+			uploadDataToUserAuthorization();
+			uploadDataToUserGeneral();
 	}
-	
-	private boolean uploadDataToUserGeneral(){
-		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
-				+ "user_birthday, user_education, user_description) VALUES(?,?,?,?,?,?,?,?,?);";
-		try (Connection connection = dataSource.getConnection();){
-			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(userGeneralSql);
-			for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i++){
-				ps.setInt(1, userIdList.get(i));
-				ps.setString(2, "user_fio_" + i);
-				ps.setString(3, 1111111111 + i + "");
-				ps.setString(4, "user_" + i + "@gmail.com");
-				ps.setString(5, "user_adress_" + i);
-				ps.setString(6, "Male");
-				ps.setDate(7, null);
-				ps.setString(8, "Degree");
-				ps.setString(9, "user_description_" + i);
-				ps.addBatch();
-			}
-			ps.executeBatch();
-			connection.commit();			
-		} catch(SQLException e){
-			e.printStackTrace();
-		}		
-		return false;
-	}
-	
-	private boolean uploadDataToUserAuthorization(){
-		String insertUserAuthorization = "INSERT INTO user_authorization (user_id, role_id) VALUES (?, ?);";
-		try(Connection connection = dataSource.getConnection(); ){
-			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(insertUserAuthorization);
-			Integer userRole = UserRole.ROLE_ADMIN;
-			for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i ++){
-				if(i > 25){
-					userRole = UserRole.ROLE_REGULAR_USER;
-				}
-				ps.setInt(1, userIdList.get(i));
-				ps.setInt(2, userRole);
-				ps.addBatch();
-			}
-			ps.executeBatch();
-			connection.commit();
-		} catch(SQLException e){
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
-	private boolean uploadDataToUserAuthentication(){
-		String insertUserAuthentication = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, true);";
-		try(Connection connection = dataSource.getConnection(); ){
-			connection.setAutoCommit(false);
-				PreparedStatement ps = connection.prepareStatement(insertUserAuthentication, Statement.RETURN_GENERATED_KEYS);
-				String userName = "admin_";
-				for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i++){
-					if(i > NUMBER_ADMINS_IN_DB){
-						userName = "user_";
-					}
-					ps.setString(1, userName + i);
-					ps.setString(2, encoder.encode(userName + i));
-					ps.executeUpdate();
-					ResultSet rs = ps.getGeneratedKeys();
-					rs.next();
-					userIdList.add(rs.getInt(1));
-				}
-			connection.commit();
-		} catch(SQLException e){
-			e.printStackTrace();
-		}
-		return true;
-	}	
-	
-	private boolean uploadDataToUserRole(){
-		String insertUserRoleSql = "INSERT INTO user_role (role_id, role_name) VALUES (?,?);";
-		try(Connection connection = dataSource.getConnection()){
-			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(insertUserRoleSql);
-			ps.setInt(1, UserRole.ROLE_ADMIN);
-			ps.setString(2, "ROLE_ADMIN");
-			ps.addBatch();
-			ps.setInt(1, UserRole.ROLE_REGULAR_USER);
-			ps.setString(2, "ROLE_REGULAR_USER");
-			ps.addBatch();
-			ps.executeBatch();		
-			connection.commit();
-		} catch(SQLException e){
-			
-		}
-		return true;
-	}	
 	
 	@Override
-	public boolean createTables() {
-		boolean result = false;
+	public void createTables() throws DataBaseException {
 		String dropTableUserRoleSql = "DROP TABLE IF EXISTS user_role;";
 		String dropTableUserAuthenticationSql = "DROP TABLE IF EXISTS user_authentication;";
 		String dropTableUserAuthorizationSql = "DROP TABLE IF EXISTS user_authorization;";
@@ -146,24 +52,139 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 		String createUserGeneralSql = "CREATE TABLE user_general (USER_ID INT NOT NULL, USER_FIO VARCHAR(100) NOT NULL, USER_PHONE VARCHAR(50) NOT NULL, USER_MAIL VARCHAR(50) NULL, USER_ADRESS VARCHAR(250) NULL, USER_GENDER VARCHAR(50) NOT NULL, USER_BIRTHDAY DATE NULL,USER_EDUCATION VARCHAR(50) NOT NULL, USER_DESCRIPTION MEDIUMTEXT NULL, PRIMARY KEY (USER_ID));";
 		try(Connection connection = dataSource.getConnection();){
 			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(dropTableUserRoleSql);
-			ps.addBatch();
-			ps.addBatch(dropTableUserGeneralSql);
-			ps.addBatch(dropTableUserAuthorizationSql);
-			ps.addBatch(dropTableUserAuthenticationSql);
-			ps.addBatch(dropTablePersistentSql);
-			
-			ps.addBatch(createUserRoleSql);
-			ps.addBatch(createUserAuthorizationSql);
-			ps.addBatch(createUserAuthenticationSql);
-			ps.addBatch(createUserGeneralSql);
-			ps.addBatch(createPesistentSql);
-			ps.executeBatch();	
+			try (PreparedStatement ps = connection.prepareStatement(dropTableUserRoleSql)) {
+				ps.addBatch();
+				ps.addBatch(dropTableUserGeneralSql);
+				ps.addBatch(dropTableUserAuthorizationSql);
+				ps.addBatch(dropTableUserAuthenticationSql);
+				ps.addBatch(dropTablePersistentSql);
+				
+				ps.addBatch(createUserRoleSql);
+				ps.addBatch(createUserAuthorizationSql);
+				ps.addBatch(createUserAuthenticationSql);
+				ps.addBatch(createUserGeneralSql);
+				ps.addBatch(createPesistentSql);
+				ps.executeBatch();	
+			} catch (SQLException ex){
+				connection.rollback();
+				connection.setAutoCommit(true);
+				throw new DataBaseException("Can't execute queries: (1): " + dropTableUserRoleSql + ", (2): " + dropTableUserAuthenticationSql +
+						", (3): " + dropTableUserAuthorizationSql + ", (4): " + dropTableUserGeneralSql + ", (5): " + dropTablePersistentSql + 
+						", (6): " + createPesistentSql + ", (7): " + createUserRoleSql + "(8): " + createUserAuthenticationSql + 
+						", (9): " + createUserAuthorizationSql + ", (10): " + createUserGeneralSql, ex);
+			}
 			connection.commit();
-			result = !result;
-		} catch(SQLException e){
-			e.printStackTrace();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't create tables", ex);
 		}		
-		return false;
+	}	
+	
+	private void uploadDataToUserGeneral() throws DataBaseException{
+		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
+				+ "user_birthday, user_education, user_description) VALUES(?,?,?,?,?,?,?,?,?);";
+		try (Connection connection = dataSource.getConnection();){
+			connection.setAutoCommit(false);
+
+			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
+				for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i++){
+					ps.setInt(1, userIdList.get(i));
+					ps.setString(2, "user_fio_" + i);
+					ps.setString(3, 1111111111 + i + "");
+					ps.setString(4, "user_" + i + "@gmail.com");
+					ps.setString(5, "user_adress_" + i);
+					ps.setString(6, "Male");
+					ps.setDate(7, null);
+					ps.setString(8, "Degree");
+					ps.setString(9, "user_description_" + i);
+					ps.addBatch();
+				}
+				ps.executeBatch();
+			} catch (SQLException ex){
+				connection.rollback();
+				connection.setAutoCommit(true);
+				throw new DataBaseException("Can't execute insert query: " + userGeneralSql, ex);
+			}
+			connection.commit();			
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't uploads data to the user_general table.", ex);
+		}		
+	}
+	
+	private void uploadDataToUserAuthorization() throws DataBaseException{
+		String insertUserAuthorization = "INSERT INTO user_authorization (user_id, role_id) VALUES (?, ?);";
+		try(Connection connection = dataSource.getConnection(); ){
+			connection.setAutoCommit(false);
+			try(PreparedStatement ps = connection.prepareStatement(insertUserAuthorization)){
+				Integer userRole = UserRole.ROLE_ADMIN;
+				for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i ++){
+					if(i > 25){
+						userRole = UserRole.ROLE_REGULAR_USER;
+					}
+					ps.setInt(1, userIdList.get(i));
+					ps.setInt(2, userRole);
+					ps.addBatch();
+				}
+				ps.executeBatch();
+			} catch (SQLException ex){
+				connection.rollback();
+				connection.setAutoCommit(true);
+				throw new DataBaseException("Can't execute insert query: " + insertUserAuthorization, ex);
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't uploads data to the user_authorization table.", ex);
+		}
+	}
+	
+	private void uploadDataToUserAuthentication() throws DataBaseException{
+		String insertUserAuthentication = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, true);";
+		try(Connection connection = dataSource.getConnection(); ){
+			connection.setAutoCommit(false);
+			try(PreparedStatement ps = connection.prepareStatement(insertUserAuthentication, Statement.RETURN_GENERATED_KEYS)){
+				String userName = "admin_";
+				for(int i = 0; i < NUMBER_ALL_USERS_IN_DB; i++){
+					if(i > NUMBER_ADMINS_IN_DB) userName = "user_";
+					ps.setString(1, userName + i);
+					ps.setString(2, encoder.encode(userName + i));
+					ps.executeUpdate();
+					ResultSet rs = ps.getGeneratedKeys();
+					rs.next();
+					userIdList.add(rs.getInt(1));
+				}
+			} catch(SQLException ex){
+				connection.rollback();
+				connection.setAutoCommit(true);
+				throw new DataBaseException("Can't execute insert query: " + insertUserAuthentication, ex);
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't insert data to the user_authentication table.", ex);
+		}
+	}	
+	
+	private void uploadDataToUserRole() throws DataBaseException{
+		String insertUserRoleSql = "INSERT INTO user_role (role_id, role_name) VALUES (?,?);";
+		try(Connection connection = dataSource.getConnection()){
+			connection.setAutoCommit(false);
+			try(PreparedStatement ps = connection.prepareStatement(insertUserRoleSql)){
+				ps.setInt(1, UserRole.ROLE_ADMIN);
+				ps.setString(2, "ROLE_ADMIN");
+				ps.addBatch();
+				ps.setInt(1, UserRole.ROLE_REGULAR_USER);
+				ps.setString(2, "ROLE_REGULAR_USER");
+				ps.addBatch();
+				ps.executeBatch();		
+			} catch(SQLException ex){
+				throw new DataBaseException("Can't execute insert query: " + insertUserRoleSql, ex);
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't upload data to the user_role table", ex);
+		}
 	}	
 }

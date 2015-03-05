@@ -25,4 +25,8 @@ public class Search {
 		this.searchType = searchType;
 	}
 	
+	@Override
+	public String toString() {
+		return "searchType: " + this.searchType + ", searchRow: " + this.searchRow;
+	}
 }

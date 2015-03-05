@@ -59,8 +59,12 @@ public class MainController {
 	
 	// mapping inititalization tables and inserted data request
 	@RequestMapping(value = "/initializeTables", method = RequestMethod.GET)
-	public String initializeTables(Model model){
-		userService.initializationDataBase();
+	public String initializeTables(Model model, RedirectAttributes redirectAttribute){
+		if(userService.initializationDataBase()){
+			redirectAttribute.addFlashAttribute("success", "Таблицы успешно созданы");
+		} else {
+			redirectAttribute.addFlashAttribute("error", "Не удалось создать таблицы(смотри логи)");
+		}
 		return "redirect:/login";
 	}
 	
@@ -98,7 +102,7 @@ public class MainController {
 			return "login";
 		} else {
 			userService.insertUser(user);
-			// redirect user to the users jsp after successful registration
+			// redirect user to the users.jsp after successful registration
 			try {
 				UserDetails userDetail = userDetailsSvc.loadUserByUsername(user.getUserLogin());
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetail, user.getUserPassword(), userDetail.getAuthorities());
@@ -122,8 +126,11 @@ public class MainController {
 			userService.setUserAndSearchAttributes(model, user, search);
 			return "register";
 		} else {
-			redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");
-			userService.insertUser(user);
+			if(userService.insertUser(user)){
+				redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");
+			} else {
+				redirectAttribute.addFlashAttribute("error", "Не удалось зарегестрировать пользователя");
+			}
 			return "redirect:/users";
 		}
 	}
@@ -140,8 +147,12 @@ public class MainController {
 			userService.setFormList(model);
 			return "edit";
 		} else {
-			userService.updateUser(user);
-			redirectAttribute.addFlashAttribute("success", "Данные успешно обновлены");
+			//check if user successful updated
+			if(userService.updateUser(user)){
+				redirectAttribute.addFlashAttribute("success", "Данные успешно обновлены");
+			} else {
+				redirectAttribute.addFlashAttribute("error", "Не удалось обновить пользователя");
+			}
 			return "redirect:/users";
 		}
 	}
@@ -186,8 +197,12 @@ public class MainController {
 	// delete user by id (set enable to false in db)
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
-		redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
-		userService.deleteUser(id);
+		//check if user successful deleted
+		if(userService.deleteUser(id)){
+			redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
+		} else {
+			redirectAttribute.addFlashAttribute("error", "Не удалось казнить пользователя");
+		}
 		return "redirect:/users";
 	}	
 }

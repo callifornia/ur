@@ -1,6 +1,5 @@
 package com.prokopiv.web.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,27 +23,43 @@ public class UserServiceImpl implements UserService {
 	
 	private static Logger logger = LogManager.getLogger(UserServiceImpl.class);
 	
-	@Autowired
-	UserDao userDao;
+	@Autowired UserDao userDao;
 	
-	@Autowired
-	InitializationDataBaseImpl initialization;
+	@Autowired InitializationDataBaseImpl initialization;
 
 	@Override
 	public boolean userExist(String login) {
-		return userDao.userExist(login);
+		boolean result = true;
+		try{
+			result = userDao.userExist(login);
+		} catch(DataBaseException ex){
+			logger.warn("Can't execute method userExist()", ex);
+		}
+		return result; 
 	}
 	
 	@Override
 	public boolean initializationDataBase() {
-		initialization.createTables();
-		initialization.uploadData();
-		return true;
+		boolean result = true;
+		try {
+			initialization.createTables();
+			initialization.uploadData();
+		} catch (DataBaseException ex){
+			logger.warn("Can't initialize tables", ex);
+			result = !result;
+		}
+		return result;
 	}
 	
 	@Override
 	public User getUserById(String id) {
-		return userDao.getUserById(id);
+		User user = null;
+		try{
+			user = userDao.getUserById(id);
+		} catch(DataBaseException ex){
+			logger.warn("Can't execute method getUserById()", ex);
+		}
+		return user; 
 	}
 	
 	@Override
@@ -52,8 +67,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.recoveryUser(id);
 		} catch(DataBaseException e){
-			logger.warn("Can't recovery user with id: " + id, e);
-			return false;
+			logger.warn("Can't recovery user with id: " + id, e);			
 		}
 		return true;
 	}
@@ -65,46 +79,67 @@ public class UserServiceImpl implements UserService {
 			pagination.setTotalRecords(0);
 			return usersList;
 		}
-		switch(search.getSearchType()){
-			case "login" : usersList = userDao.getUsersByLogin(search.getSearchRow(), pagination);
-			break;
-			case "phone" : usersList = userDao.getUsersByPhone(search.getSearchRow(), pagination);
-			break;
-			case "lastName" : usersList = userDao.getUsersByLastName(search.getSearchRow(), pagination);
-			break;
-			case "all" : usersList = userDao.getUsers(pagination);
-			break;
+		try {			
+			switch(search.getSearchType()){
+				case "login" : usersList = userDao.getUsersByLogin(search.getSearchRow(), pagination);
+				break;
+				case "phone" : usersList = userDao.getUsersByPhone(search.getSearchRow(), pagination);
+				break;
+				case "lastName" : usersList = userDao.getUsersByLastName(search.getSearchRow(), pagination);
+				break;
+				case "all" : usersList = userDao.getUsers(pagination);
+				break;
+			}
+		} catch (DataBaseException ex){
+			logger.warn("Can't execute method: getUserBySearch() with search param:" + search.toString(), ex);
 		}
 		return usersList;
 	}
 
 	@Override
 	public List<User> getUserList(Pagination pagination) {
-		return userDao.getUsers(pagination);
-	}
-
-	@Override
-	public void insertUser(User user) {
+		List<User> usersList = null;
 		try{
-			
-			
-			
-			
-			userDao.insertUser(user);
-		} catch (SQLException e){
-			
-			e.printStackTrace();
+			usersList =  userDao.getUsers(pagination);
+		} catch (DataBaseException ex){
+			logger.warn("Can't execute method: getUserList()", ex);
 		}
+		return  usersList;
 	}
 
 	@Override
-	public void updateUser(User user) {
-		userDao.updateUser(user);
+	public boolean insertUser(User user) {
+		boolean result = true;
+		try{
+			userDao.insertUser(user);
+		} catch (DataBaseException ex){
+			logger.warn("Can't execute method insertUser()", ex);
+			result = !result;
+		}
+		return result;
 	}
 
 	@Override
-	public void deleteUser(String id) {
-		userDao.deleteUser(id);
+	public boolean updateUser(User user) {
+		boolean result = true;
+		try{
+			userDao.updateUser(user);
+		} catch(DataBaseException ex){
+			logger.warn("Can't execute method updateUser(): " + user.toString(), ex);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean deleteUser(String id) {
+		boolean result = true;
+		try{
+			userDao.deleteUser(id);
+		} catch(DataBaseException ex){
+			logger.warn("Can't execute deleteUser with id: " + id, ex);
+			result = !result;
+		}
+		return result;
 	}
 	
 	@Override

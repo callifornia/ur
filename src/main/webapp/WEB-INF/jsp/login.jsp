@@ -25,7 +25,23 @@
 <div class = "header" id = "header">
 	<div class = "container">
 		<div class = "row">
-			<div class = "span7"> <h2>Write somethink here</h2></div>
+			<div class = "span7"> <h2>Write somethink here</h2>
+			<c:choose>
+				<c:when test="${not empty success}">
+					<div id = "show" class="alert alert-success">
+						${success}	
+					</div>
+				</c:when>	
+				<c:when test="${not empty error}">
+					<div id = "show" class="alert alert-error">
+						${error}	
+					</div>
+				</c:when>							
+				<c:otherwise>
+					&nbsp 
+				</c:otherwise>
+			</c:choose>	
+			</div>
 			<div class = "span5"> 				
 				<div class = "row">	
 					<form name = "loginForm" action="<c:url value = 'j_spring_security_check' />" method = "POST">

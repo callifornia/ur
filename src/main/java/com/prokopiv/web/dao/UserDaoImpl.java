@@ -36,20 +36,20 @@ public class UserDaoImpl implements UserDao {
 				Integer userId = Integer.valueOf(id);
 				ps.setInt(1, userId);
 				ps.executeUpdate();
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw ex;
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
-		} catch(Exception ex){				
+		} catch(SQLException ex){				
 			throw new DataBaseException("Can't update user_authentiocation table. SQL Query: " + sql, ex);
 		}		
 	}
 	
 	@Override
-	public List<User> getUsersByLogin(String login, Pagination pagination) {
+	public List<User> getUsersByLogin(String login, Pagination pagination) throws DataBaseException {
 		ArrayList<User> userList = new ArrayList<User>();
 		String sqlCount = "SELECT count(*) from user_authentication WHERE user_name like ?";	
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_name like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -74,17 +74,17 @@ public class UserDaoImpl implements UserDao {
 				ResultSet rss = pss.executeQuery();
 				rss.next();
 				pagination.setTotalRecords(rss.getInt(1));				
-			} catch(SQLException e){
-				e.printStackTrace();
+			} catch(SQLException ex){
+				throw new DataBaseException("Can't execute query: " + sqlCount, ex);
 			}
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}		
 		return userList;
 	}
 	
 	@Override
-	public List<User> getUsersByPhone(String phone, Pagination pagination) {
+	public List<User> getUsersByPhone(String phone, Pagination pagination) throws DataBaseException {
 		ArrayList<User> userList = new ArrayList<User>();
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_phone like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit "  + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
 		String sqlCount = "SELECT count(*) from user_general WHERE user_phone like ?";			
@@ -109,17 +109,17 @@ public class UserDaoImpl implements UserDao {
 				ResultSet rss = pss.executeQuery();
 				rss.next();
 				pagination.setTotalRecords(rss.getInt(1));				
-			} catch(SQLException e){
-				e.printStackTrace();
+			} catch(SQLException ex){
+				throw new DataBaseException("Can't execute query: " + sqlCount, ex);
 			}			
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}		
 		return userList;
 	}
 	
 	@Override
-	public List<User> getUsers(Pagination pagination) {
+	public List<User> getUsers(Pagination pagination) throws DataBaseException {
 		ArrayList<User> userList = new ArrayList<User>();
 		String getUsersSql = "SELECT ua.user_id, ua.user_enable, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ug.user_mail, ug.user_gender "
 									+ "FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -141,15 +141,15 @@ public class UserDaoImpl implements UserDao {
 			rs = st.executeQuery("SELECT count(*) from user_authentication");
 			rs.next();
 			pagination.setTotalRecords(rs.getInt(1));
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query: " + getUsersSql, ex);
 		}
 		return userList;
 	}
 
 	
 	@Override
-	public List<User> getUsersByLastName(String lastName, Pagination pagination) {
+	public List<User> getUsersByLastName(String lastName, Pagination pagination) throws DataBaseException {
 		ArrayList<User> userList = new ArrayList<User>();
 		String sqlCount = "SELECT count(*) from user_general WHERE user_fio like ?";
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_fio like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -174,18 +174,18 @@ public class UserDaoImpl implements UserDao {
 				ResultSet rss = pss.executeQuery();
 				rss.next();
 				pagination.setTotalRecords(rss.getInt(1));				
-			} catch(SQLException e){
-				e.printStackTrace();
+			} catch(SQLException ex){
+				throw new DataBaseException("Can't execute query: " + sqlCount, ex);
 			}
 
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}		
 		return userList;
 	}
 	
 	@Override
-	public boolean userExist(String login) {
+	public boolean userExist(String login) throws DataBaseException {
 		boolean result = true;
 		String sql = "SELECT 1 FROM user_authentication WHERE user_name = ?";
 		try (Connection connection = dataSource.getConnection();
@@ -195,14 +195,15 @@ public class UserDaoImpl implements UserDao {
 			if(!rs.next()){
 				result = !result;
 			}			
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			result = !result;
+			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}
 		return result;
 	}
 
 	@Override
-	public User getUserById(String id) {
+	public User getUserById(String id) throws DataBaseException {
 		String sql = "SELECT ua.user_id, ua.user_name, ua.user_enable, ur.role_name,  ug.user_fio, ug.user_phone, ug.user_mail, ug.user_adress, ug.user_gender, ug.user_birthday, ug.user_education, ug.user_description FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_id = ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id)";
 		User user = new User();
 		try (Connection connection = dataSource.getConnection();
@@ -222,8 +223,8 @@ public class UserDaoImpl implements UserDao {
 			user.setUserMail(rs.getString("user_mail"));
 			user.setUserPhone(rs.getString("user_phone"));
 			user.setUserRole(rs.getString("role_name"));
-		} catch(SQLException e){
-			e.printStackTrace();
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}
 		return user;
 	}
@@ -231,7 +232,7 @@ public class UserDaoImpl implements UserDao {
 
 	
 	@Override
-	public void insertUser(User user) throws SQLException {
+	public void insertUser(User user) throws DataBaseException {
 		String userAuthenticationSql = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, ?);";
 		String userAuthorizationSql = "INSERT INTO user_authorization (user_id, role_id) VALUES (?,?);";
 		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
@@ -251,10 +252,10 @@ public class UserDaoImpl implements UserDao {
 				ResultSet res = ps.getGeneratedKeys();
 				res.next();
 				genId = res.getInt(1);
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute insert query: " + userAuthenticationSql, ex);
 			}
 			try (PreparedStatement ps = connection.prepareStatement(userAuthorizationSql)){				
 				if(!"role_admin".equalsIgnoreCase(user.getUserRole())){
@@ -263,10 +264,10 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(1, genId);
 				ps.setInt(2, role);
 				ps.executeUpdate();
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute insert query: " + userAuthorizationSql, ex);
 			}
 			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
 				ps.setInt(1, genId);
@@ -279,19 +280,20 @@ public class UserDaoImpl implements UserDao {
 				ps.setString(8, user.getUserEducation());
 				ps.setString(9, user.getUserDescription());
 				ps.executeUpdate();
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute insert query: " + userGeneralSql, ex);
 			}		
 			connection.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			connection.setAutoCommit(false);
+		} catch (SQLException ex) {
+			throw new DataBaseException("Can't insert new user",ex);
 		}
 	}
 	
 	@Override
-	public void updateUser(User user) {
+	public void updateUser(User user) throws DataBaseException {
 		String userAuthorizationSql  = "UPDATE user_authorization SET role_id = ? WHERE user_id = ?";
 		String userGeneralSql = "UPDATE user_general SET user_fio = ?, user_phone = ?, user_mail = ?, user_adress = ?, user_gender = ?, user_birthday = ?, user_education = ?, user_description = ? WHERE user_id = ?";
 		
@@ -306,10 +308,10 @@ public class UserDaoImpl implements UserDao {
 					ps.setString(1, encoder.encode(user.getUserPassword()));					
 					ps.setInt(2, userId);
 					ps.executeUpdate();
-				} catch (SQLException e){
+				} catch (SQLException ex){
 					connection.rollback();
 					connection.setAutoCommit(true);
-					throw e;
+					throw new DataBaseException("Can't execute update query: " + userAuthenticationSql, ex);
 				}
 			}
 			
@@ -321,10 +323,10 @@ public class UserDaoImpl implements UserDao {
 				ps.setInt(1, role);
 				ps.setInt(2, userId);
 				ps.executeUpdate();
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute update query: " + userAuthorizationSql, ex);
 			}
 			
 			try (PreparedStatement ps = connection.prepareStatement(userGeneralSql)){
@@ -338,19 +340,20 @@ public class UserDaoImpl implements UserDao {
 				ps.setString(8, user.getUserDescription());
 				ps.setInt(9, userId);
 				ps.executeUpdate();
-			} catch(SQLException e){
+			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute update query" + userGeneralSql, ex);
 			}
 			connection.commit();
-		} catch(SQLException e){
-			e.printStackTrace();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute query update user", ex);
 		}
 	}
 
 	@Override
-	public void deleteUser(String id) {
+	public void deleteUser(String id) throws DataBaseException {
 		String sql = "UPDATE user_authentication SET user_enable = false WHERE user_id = ?";
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
@@ -358,14 +361,15 @@ public class UserDaoImpl implements UserDao {
 			try(PreparedStatement ps = connection.prepareStatement(sql)){
 				ps.setInt(1, userId);
 				ps.executeUpdate();
-			} catch (SQLException e){
+			} catch (SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw e;
+				throw new DataBaseException("Can't execute update query: " + sql, ex);
 			}
 			connection.commit();
-		} catch(SQLException e){
-			e.printStackTrace();
+			connection.setAutoCommit(true);
+		} catch(SQLException ex){
+			throw new DataBaseException("Can't execute update query", ex);
 		}
 	}
 

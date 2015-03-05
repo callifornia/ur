@@ -1,7 +1,9 @@
 package com.prokopiv.web.config;
 
+import com.prokopiv.web.exception.DataBaseException;
+
 public interface InitializationDataBase {
 	
-	public boolean createTables();
-	public boolean uploadData();
+	public void createTables() throws DataBaseException;
+	public void uploadData() throws DataBaseException;
 }

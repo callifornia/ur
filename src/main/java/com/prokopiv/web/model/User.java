@@ -118,4 +118,12 @@ public class User {
 	public void setUserDescription(String userDescription) {
 		this.userDescription = userDescription;
 	}	
+	
+	@Override
+	public String toString() {
+		return "id: " + this.userId + ", login: " + this.userLogin + ", role: " + this.userRole + ", last name: " + this.userlastName + 
+				", phone: " + this.userPhone + ", mail: " + this.userMail + ", adress: " + this.userAdress + 
+				", gender: " + this.userGender + ", birthday: " + this.userBirthday + ", education: " + this.userEducation + 
+				", description: " + this.userDescription + ", enable: " + this.userEnable;
+	}
 }

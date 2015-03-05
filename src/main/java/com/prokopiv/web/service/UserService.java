@@ -18,9 +18,9 @@ public interface UserService {
 	public List<User> getUserList(Pagination pagination);
 
 	public boolean recoveryUser(String id);
-	public void insertUser(User user);
-	public void updateUser(User user);
-	public void deleteUser(String id);
+	public boolean insertUser(User user);
+	public boolean updateUser(User user);
+	public boolean deleteUser(String id);
 	
 	public void setFormList(Model model);
 	public void setUserAndSearchAttributes(Model model, User user, Search search);
