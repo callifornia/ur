@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -21,7 +19,7 @@ import com.prokopiv.web.validation.Pagination;
 @Service
 public class UserServiceImpl implements UserService {
 	
-	private static Logger logger = LogManager.getLogger(UserServiceImpl.class);
+//	private static Logger logger = LogManager.getLogger(UserServiceImpl.class);
 	
 	@Autowired UserDao userDao;
 	
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			result = userDao.userExist(login);
 		} catch(DataBaseException ex){
-			logger.warn("Can't execute method userExist()", ex);
+//			logger.warn("Can't execute method userExist()", ex);
 		}
 		return result; 
 	}
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
 			initialization.createTables();
 			initialization.uploadData();
 		} catch (DataBaseException ex){
-			logger.warn("Can't initialize tables", ex);
+//			logger.warn("Can't initialize tables", ex);
 			result = !result;
 		}
 		return result;
@@ -57,7 +55,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			user = userDao.getUserById(id);
 		} catch(DataBaseException ex){
-			logger.warn("Can't execute method getUserById()", ex);
+//			logger.warn("Can't execute method getUserById()", ex);
 		}
 		return user; 
 	}
@@ -67,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.recoveryUser(id);
 		} catch(DataBaseException e){
-			logger.warn("Can't recovery user with id: " + id, e);			
+//			logger.warn("Can't recovery user with id: " + id, e);			
 		}
 		return true;
 	}
@@ -91,7 +89,7 @@ public class UserServiceImpl implements UserService {
 				break;
 			}
 		} catch (DataBaseException ex){
-			logger.warn("Can't execute method: getUserBySearch() with search param:" + search.toString(), ex);
+//			logger.warn("Can't execute method: getUserBySearch() with search param:" + search.toString(), ex);
 		}
 		return usersList;
 	}
@@ -102,7 +100,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			usersList =  userDao.getUsers(pagination);
 		} catch (DataBaseException ex){
-			logger.warn("Can't execute method: getUserList()", ex);
+//			logger.warn("Can't execute method: getUserList()", ex);
 		}
 		return  usersList;
 	}
@@ -113,7 +111,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.insertUser(user);
 		} catch (DataBaseException ex){
-			logger.warn("Can't execute method insertUser()", ex);
+//			logger.warn("Can't execute method insertUser()", ex);
 			result = !result;
 		}
 		return result;
@@ -125,7 +123,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.updateUser(user);
 		} catch(DataBaseException ex){
-			logger.warn("Can't execute method updateUser(): " + user.toString(), ex);
+//			logger.warn("Can't execute method updateUser(): " + user.toString(), ex);
 		}
 		return result;
 	}
@@ -136,7 +134,7 @@ public class UserServiceImpl implements UserService {
 		try{
 			userDao.deleteUser(id);
 		} catch(DataBaseException ex){
-			logger.warn("Can't execute deleteUser with id: " + id, ex);
+//			logger.warn("Can't execute deleteUser with id: " + id, ex);
 			result = !result;
 		}
 		return result;

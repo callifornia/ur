@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -21,9 +23,9 @@ import com.prokopiv.web.exception.DataBaseException;
 public class InitializationDataBaseImpl implements InitializationDataBase {
 	
 	@Autowired DataSource dataSource;
-	
 	@Autowired BCryptPasswordEncoder encoder;
-	
+
+	private static final Logger logger = LogManager.getLogger(InitializationDataBaseImpl.class);
 	private List<Integer> userIdList = new ArrayList<Integer>(100);
 	private static final int NUMBER_ADMINS_IN_DB = 100;
 	private static final int NUMBER_USERS_IN_DB = 100;
@@ -31,10 +33,11 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 	
 	
 	public void uploadData() throws DataBaseException{	
-			uploadDataToUserRole();		
-			uploadDataToUserAuthentication();
-			uploadDataToUserAuthorization();
-			uploadDataToUserGeneral();
+			
+//			uploadDataToUserRole();		
+//			uploadDataToUserAuthentication();
+//			uploadDataToUserAuthorization();
+//			uploadDataToUserGeneral();
 	}
 	
 	@Override

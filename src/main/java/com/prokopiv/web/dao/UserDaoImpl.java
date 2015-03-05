@@ -243,15 +243,15 @@ public class UserDaoImpl implements UserDao {
 			Integer role = UserRole.ROLE_ADMIN;
 			
 			try (PreparedStatement ps = connection.prepareStatement(userAuthenticationSql, Statement.RETURN_GENERATED_KEYS);
-				ResultSet rs = ps.getResultSet();){
-				
+				){
+				ResultSet rs = ps.getResultSet();
 				ps.setString(1, user.getUserLogin());
 				ps.setString(2, encoder.encode(user.getUserPassword()));
 				ps.setBoolean(3, true);
 				ps.executeUpdate();
-				ResultSet res = ps.getGeneratedKeys();
-				res.next();
-				genId = res.getInt(1);
+				rs = ps.getGeneratedKeys();
+				rs.next();
+				genId = rs.getInt(1);
 			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
