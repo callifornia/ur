@@ -1,7 +1,10 @@
 Описание:
 
 1. dbconfig.properties - config бд.
-2. В футере на главной странице ссылка 	"Инициализировать таблици"
+2. src/main/resources/log4j2 - set path for logs 
+  (<Property name="FileErrorPath">C:/log/error.log</Property>
+  	<Property name="FileInfoPath">C:/log/info.log</Property>)
+3. В футере на главной странице ссылка 	"Инициализировать таблици"
 <a href='http://postimage.org/' target='_blank'><img src='http://s7.postimg.org/nba5xq6vf/image.png' border='0' alt="Без имени 3" /></a><br /><br /><br />
 
 создает необходимые таблицы и наполняет их данными. Логин и пароль одинаковы: (логин: admin_0, пароль: admin_0)
