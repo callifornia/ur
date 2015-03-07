@@ -24,6 +24,5 @@ public class WebAuthenticationFailureHandler extends SimpleUrlAuthenticationFail
 		} 
 		setDefaultFailureUrl("/loginError");
 		super.onAuthenticationFailure(request, response, exception);
-	}    
-	
+	}    	
 }

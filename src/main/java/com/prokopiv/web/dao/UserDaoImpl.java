@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -27,8 +29,10 @@ public class UserDaoImpl implements UserDao {
 	
 	@Autowired Pagination pagination;
 	
+	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 	@Override
 	public void recoveryUser(String id) throws DataBaseException {
+		logger.info("Recovery user with id \"" + id + "\"");
 		String sql = "UPDATE user_authentication SET user_enable = true WHERE user_id = ?";
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
@@ -50,6 +54,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public List<User> getUsersByLogin(String login, Pagination pagination) throws DataBaseException {
+		logger.info("Get user by login \"" + login + "\"");
 		ArrayList<User> userList = new ArrayList<User>();
 		String sqlCount = "SELECT count(*) from user_authentication WHERE user_name like ?";	
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_name like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -85,6 +90,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public List<User> getUsersByPhone(String phone, Pagination pagination) throws DataBaseException {
+		logger.info("Get user by phone \"" + phone + "\"");
 		ArrayList<User> userList = new ArrayList<User>();
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_phone like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit "  + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
 		String sqlCount = "SELECT count(*) from user_general WHERE user_phone like ?";			
@@ -120,6 +126,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public List<User> getUsers(Pagination pagination) throws DataBaseException {
+		logger.info("Get user list");
 		ArrayList<User> userList = new ArrayList<User>();
 		String getUsersSql = "SELECT ua.user_id, ua.user_enable, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ug.user_mail, ug.user_gender "
 									+ "FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -150,6 +157,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public List<User> getUsersByLastName(String lastName, Pagination pagination) throws DataBaseException {
+		logger.info("Get user by last name \"" + lastName + "\"");
 		ArrayList<User> userList = new ArrayList<User>();
 		String sqlCount = "SELECT count(*) from user_general WHERE user_fio like ?";
 		String sql = "SELECT ua.user_id, ur.role_name, ua.user_name, ug.user_fio, ug.user_phone, ua.user_enable, ug.user_mail, ug.user_gender FROM user_authentication as ua, user_general as ug, user_role as ur, user_authorization as uz WHERE ug.user_fio like ? AND ua.user_id = ug.user_id AND (ua.user_id = uz.user_id AND uz.role_id = ur.role_id) limit " + pagination.getLimitOffset() +"," + pagination.getLimitResords()  + ";";
@@ -186,6 +194,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public boolean userExist(String login) throws DataBaseException {
+		logger.info("Check user exist by login \"" + login + "\"");
 		boolean result = true;
 		String sql = "SELECT 1 FROM user_authentication WHERE user_name = ?";
 		try (Connection connection = dataSource.getConnection();
@@ -194,6 +203,7 @@ public class UserDaoImpl implements UserDao {
 			ResultSet rs = ps.executeQuery();
 			if(!rs.next()){
 				result = !result;
+				logger.info("User already exist \"" + login + "\"");
 			}			
 		} catch(SQLException ex){
 			result = !result;
@@ -226,6 +236,7 @@ public class UserDaoImpl implements UserDao {
 		} catch(SQLException ex){
 			throw new DataBaseException("Can't execute query: " + sql, ex);
 		}
+		logger.info("Get user by id \"" + id + "\". User: \"" + user.toString() + "\"");
 		return user;
 	}
 
@@ -233,6 +244,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public void insertUser(User user) throws DataBaseException {
+		logger.info("Insert new user \"" + user.toString() + "\"");
 		String userAuthenticationSql = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, ?);";
 		String userAuthorizationSql = "INSERT INTO user_authorization (user_id, role_id) VALUES (?,?);";
 		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
@@ -294,6 +306,7 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public void updateUser(User user) throws DataBaseException {
+		logger.info("Update user with id \"" + user.toString() + "\"");
 		String userAuthorizationSql  = "UPDATE user_authorization SET role_id = ? WHERE user_id = ?";
 		String userGeneralSql = "UPDATE user_general SET user_fio = ?, user_phone = ?, user_mail = ?, user_adress = ?, user_gender = ?, user_birthday = ?, user_education = ?, user_description = ? WHERE user_id = ?";
 		
@@ -354,6 +367,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public void deleteUser(String id) throws DataBaseException {
+		logger.info("Delete user with id \"" + id + "\"");
 		String sql = "UPDATE user_authentication SET user_enable = false WHERE user_id = ?";
 		try (Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
