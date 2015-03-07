@@ -1,6 +1,6 @@
 Описание:
 
-1. dbconfig.properties - driverClassName, url, username, password.
+1. dbconfig.properties - driverClassName, url, username, password. (build on mySQL)
 2. src/main/resources/log4j2 - set path for logs 
   (Property  tag)
 3. В футере на главной странице ссылка 	"Инициализировать таблици"
