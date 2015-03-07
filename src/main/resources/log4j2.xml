@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" >
-  	<!-- <Property name="dataBasePath">C:/log/DataBase2.log</Property>
-  	<Property name="api">C:/log/Api2.log</Property>
-  </Properties> -->
+<Configuration status="OFF" >
   
-  <Loggers >
-  	<root>
-  	</root>
-  	<Logger name = "com.prokopiv.web.controllers" additivity="false" level = "info" >
-  		<AppenderRef ref = "STDOUT" />
-  	</Logger>
-  </Loggers>
-
+  <Properties>
+  	<Property name="FileErrorPath">C:/log/error.log</Property>
+  	<Property name="FileInfoPath">C:/log/info.log</Property>
+  </Properties>
+  
   <Appenders>
-
- 	<!-- <File name ="dataBaseFile" filename="${dataBasePath}">
- 		<PatternLayout >
- 			<Pattern>%d %p %C [%t] %m%n</Pattern>
- 		</PatternLayout>
- 	</File>
-
- 	<File name ="api" filename="${api}">
- 		<PatternLayout >
- 			<Pattern>%d %p %C [%t] %m%n</Pattern>
- 		</PatternLayout>
- 	</File> -->
     <Console name="STDOUT" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
-  
+    
+    <File name ="FileError" filename="${FileErrorPath}">
+ 		<PatternLayout >
+ 			<Pattern>%d   %m%n</Pattern>
+ 		</PatternLayout>
+ 	</File>
+ 	<File name ="FileInfo" filename="${FileInfoPath}">
+ 		<PatternLayout >
+ 			<Pattern>%d  %m%n</Pattern>
+ 		</PatternLayout>
+ 	</File>
   </Appenders>
+
+  <Loggers>
+  
+	<Root level = "all">
+		<appender-ref ref = "STDOUT" level = "all" />
+		<appender-ref ref = "FileInfo" level = "info" />
+		<appender-ref ref = "FileError" level = "warn" />
+	</Root>
+  	
+  	
+  	
+  </Loggers>
 </Configuration>

@@ -33,15 +33,15 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 	
 	
 	public void uploadData() throws DataBaseException{	
-			
-//			uploadDataToUserRole();		
-//			uploadDataToUserAuthentication();
-//			uploadDataToUserAuthorization();
-//			uploadDataToUserGeneral();
+			uploadDataToUserRole();		
+			uploadDataToUserAuthentication();
+			uploadDataToUserAuthorization();
+			uploadDataToUserGeneral();
 	}
 	
 	@Override
 	public void createTables() throws DataBaseException {
+		logger.info("Creating tables: user_authentication, user_authorization, user_general, persistent_logins");
 		String dropTableUserRoleSql = "DROP TABLE IF EXISTS user_role;";
 		String dropTableUserAuthenticationSql = "DROP TABLE IF EXISTS user_authentication;";
 		String dropTableUserAuthorizationSql = "DROP TABLE IF EXISTS user_authorization;";
@@ -71,19 +71,21 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			} catch (SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw new DataBaseException("Can't execute queries: (1): " + dropTableUserRoleSql + ", (2): " + dropTableUserAuthenticationSql +
+				throw new DataBaseException("Transaction rollback. Can't execute queries: (1): " + dropTableUserRoleSql + ", (2): " + dropTableUserAuthenticationSql +
 						", (3): " + dropTableUserAuthorizationSql + ", (4): " + dropTableUserGeneralSql + ", (5): " + dropTablePersistentSql + 
 						", (6): " + createPesistentSql + ", (7): " + createUserRoleSql + "(8): " + createUserAuthenticationSql + 
 						", (9): " + createUserAuthorizationSql + ", (10): " + createUserGeneralSql, ex);
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
+			logger.info("Tables (user_authentication, user_authorization, user_general, persistent_logins) successful created");
 		} catch(SQLException ex){
-			throw new DataBaseException("Can't create tables", ex);
+			throw new DataBaseException("Can't create tables. Data Base do not exist. ", ex);
 		}		
 	}	
 	
 	private void uploadDataToUserGeneral() throws DataBaseException{
+		logger.info("Insert data to the user_general table");
 		String userGeneralSql = "INSERT INTO user_general (user_id, user_fio, user_phone, user_mail, user_adress, user_gender, "
 				+ "user_birthday, user_education, user_description) VALUES(?,?,?,?,?,?,?,?,?);";
 		try (Connection connection = dataSource.getConnection();){
@@ -106,16 +108,18 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			} catch (SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw new DataBaseException("Can't execute insert query: " + userGeneralSql, ex);
+				throw new DataBaseException("Transaction rollback. Can't execute insert query: " + userGeneralSql, ex);
 			}
 			connection.commit();			
 			connection.setAutoCommit(true);
+			logger.info("Data successful inserted");
 		} catch(SQLException ex){
-			throw new DataBaseException("Can't uploads data to the user_general table.", ex);
+			throw new DataBaseException("Can't uploads data to the user_general table. Data Base do not exist.  ", ex);
 		}		
 	}
 	
 	private void uploadDataToUserAuthorization() throws DataBaseException{
+		logger.info("Inserting data to the user_authorization table");
 		String insertUserAuthorization = "INSERT INTO user_authorization (user_id, role_id) VALUES (?, ?);";
 		try(Connection connection = dataSource.getConnection(); ){
 			connection.setAutoCommit(false);
@@ -133,16 +137,18 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			} catch (SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw new DataBaseException("Can't execute insert query: " + insertUserAuthorization, ex);
+				throw new DataBaseException("Transaction rollback. Can't execute insert query: " + insertUserAuthorization, ex);
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
+			logger.info("Data successful inserted");
 		} catch(SQLException ex){
-			throw new DataBaseException("Can't uploads data to the user_authorization table.", ex);
+			throw new DataBaseException("Can't uploads data to the user_authorization table. Data Base do not exist. ", ex);
 		}
 	}
 	
 	private void uploadDataToUserAuthentication() throws DataBaseException{
+		logger.info("Inserting data to the user_authentication table");
 		String insertUserAuthentication = "INSERT INTO user_authentication (user_name, user_password, user_enable) VALUES (?, ?, true);";
 		try(Connection connection = dataSource.getConnection(); ){
 			connection.setAutoCommit(false);
@@ -160,16 +166,18 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 			} catch(SQLException ex){
 				connection.rollback();
 				connection.setAutoCommit(true);
-				throw new DataBaseException("Can't execute insert query: " + insertUserAuthentication, ex);
+				throw new DataBaseException("Transaction rollback. Can't execute insert query: " + insertUserAuthentication, ex);
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
+			logger.info("Data successful inserted to the user_authentication table");
 		} catch(SQLException ex){
-			throw new DataBaseException("Can't insert data to the user_authentication table.", ex);
+			throw new DataBaseException("Can't insert data to the user_authentication table. Data Base do not exist. ", ex);
 		}
 	}	
 	
 	private void uploadDataToUserRole() throws DataBaseException{
+		logger.info("Inserting data to the user_role table");
 		String insertUserRoleSql = "INSERT INTO user_role (role_id, role_name) VALUES (?,?);";
 		try(Connection connection = dataSource.getConnection()){
 			connection.setAutoCommit(false);
@@ -182,12 +190,13 @@ public class InitializationDataBaseImpl implements InitializationDataBase {
 				ps.addBatch();
 				ps.executeBatch();		
 			} catch(SQLException ex){
-				throw new DataBaseException("Can't execute insert query: " + insertUserRoleSql, ex);
+				throw new DataBaseException("Transaction rollback. Can't execute insert query: " + insertUserRoleSql, ex);
 			}
 			connection.commit();
 			connection.setAutoCommit(true);
+			logger.info("Data successful inserted to the user_role table");
 		} catch(SQLException ex){
-			throw new DataBaseException("Can't upload data to the user_role table", ex);
+			throw new DataBaseException("Can't upload data to the user_role table. Data Base do not exist. ", ex);
 		}
 	}	
 }

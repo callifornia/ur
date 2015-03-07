@@ -21,10 +21,16 @@
 			<property name="useCacheControlNoStore" value="true" />
 		</bean>	
 	</mvc:interceptors> 
-
+	<!-- Model -->
 	<bean class = "com.prokopiv.web.model.User"/>
 	<bean class = "com.prokopiv.web.model.Search"/>
 	
+	<!-- Spring Security authentication -->
+	<bean id = "WebAuthenticationSuccessHandler" class = "com.prokopiv.web.authentication.WebAuthenticationSuccessHandler" />
+	<bean id = "WebLogoutSuccessHandler" class = "com.prokopiv.web.authentication.WebLogoutSuccessHandler" />
+	<bean id="WebAuthenticationFailureHandler" class="com.prokopiv.web.authentication.WebAuthenticationFailureHandler" />
+  
+    <!-- Date Format-->
 	<bean id = "dateFormat" class = "java.text.SimpleDateFormat">
 		<constructor-arg value="dd-MM-yyyy" />
 	</bean>

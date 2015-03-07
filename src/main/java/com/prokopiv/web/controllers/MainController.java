@@ -1,5 +1,6 @@
 package com.prokopiv.web.controllers;
 
+import java.security.Principal;
 import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.prokopiv.web.config.InitializationDataBaseImpl;
 import com.prokopiv.web.model.Search;
 import com.prokopiv.web.model.User;
 import com.prokopiv.web.service.UserService;
@@ -61,18 +61,16 @@ public class MainController {
 	}
 	
 	private static final Logger logger = LogManager.getLogger(MainController.class);
+	
 	// mapping inititalization tables and inserted data request
 	@RequestMapping(value = "/initializeTables", method = RequestMethod.GET)
 	public String initializeTables(Model model, RedirectAttributes redirectAttribute){
-		
-		logger.info("testing info message from config ");
-		logger.warn("testing warn message from config ");
-		
-//		if(userService.initializationDataBase()){
-//			redirectAttribute.addFlashAttribute("success", "Таблицы успешно созданы");
-//		} else {
-//			redirectAttribute.addFlashAttribute("error", "Не удалось создать таблицы(смотри логи)");
-//		}
+		logger.info("Initialization tables");
+		if(userService.initializationDataBase()){
+			redirectAttribute.addFlashAttribute("success", "Таблицы успешно созданы");
+		} else {
+			redirectAttribute.addFlashAttribute("error", "Не удалось создать таблицы. Проверьте подключения к БД. (dbconfig.preperties)");
+		}
 		return "redirect:/login";
 	}
 	
@@ -89,7 +87,7 @@ public class MainController {
 		if(userService.recoveryUser(id)){
 			redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
 		} else{
-			redirectAttribute.addFlashAttribute("error", "Не удалось воскресить польхователя(смотри лог)");
+			redirectAttribute.addFlashAttribute("error", "Не удалось воскресить польхователя");
 		};
 		return "redirect:/users";
 	}
@@ -121,8 +119,9 @@ public class MainController {
 				}
 			} catch(Exception e){
 				e.printStackTrace();
+				model.addAttribute("error", "Проверьте подключения к БД. (dbconfig.preperties)");
 			}
-			return "redirect:/login";
+			return "login";
 		}
 	}
 	
@@ -196,7 +195,7 @@ public class MainController {
 	
 	// main page (users.jsp) after successful user login or registered
 	@RequestMapping(value = "/users")
-	public String users(Model model){
+	public String users(Model model, Principal principal){
 		pagination.setCurrentPage(1);
 		model.addAttribute("pagi", pagination);
 		userService.setUserAndSearchAttributes(model, userService.getUserList(pagination), search);

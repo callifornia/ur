@@ -1,5 +1,10 @@
 package com.prokopiv.web.controllers;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -13,13 +18,19 @@ import com.prokopiv.web.model.User;
 @Controller
 public class LoginController {
 	
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(){
 		return "redirect:/users";
 	}
 
 	@RequestMapping(value = "/login")
-	public String login(@ModelAttribute(value = "user") User user, Model model){
+	public String login(@ModelAttribute(value = "user") User user,HttpServletRequest request,HttpServletResponse response, Model model){
+		Boolean result = (Boolean)request.getSession().getAttribute("connect");
+		if(result != null && !result){
+			model.addAttribute("error", "Нет подключения к Базе данных. Проверьте подключения к БД. (dbconfig.preperties)");
+			request.getSession().removeAttribute("connect");
+		} 
 		return "login";
 	}
 
@@ -29,7 +40,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(ModelMap model){
+	public String logout(ModelMap model, Principal principal){
 		return "redirect:login";
 	}
 	

@@ -26,10 +26,13 @@
 		 <intercept-url pattern="/insert" access="hasRole('ROLE_ADMIN')" />
 		 <intercept-url pattern="/register" access="hasRole('ROLE_ADMIN')" />		 
 		 <form-login login-page="/login" 
-							 default-target-url="/users" 
-							 authentication-failure-url="/loginError" />
-		 <logout logout-url="/logout" 
-					delete-cookies="JSESSIONID"/>
+		 			authentication-success-handler-ref="WebAuthenticationSuccessHandler"
+		 			authentication-failure-handler-ref="WebAuthenticationFailureHandler"
+                    authentication-failure-url="/loginError" />
+		 <logout  logout-url="/logout" 
+					delete-cookies="JSESSIONID"
+					success-handler-ref="WebLogoutSuccessHandler"
+					/>
 		 <remember-me 	token-validity-seconds="1209600"								
 								remember-me-parameter="remember-me"
 								data-source-ref="dataSource" />		

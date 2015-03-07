@@ -18,6 +18,9 @@ body{
  
  
 }
+#show2{
+	visibility: hidden;	
+}
 #error-page-text-main{
 	font-size: 46px;
 	color: #6e6f70;
