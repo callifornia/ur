@@ -21,9 +21,9 @@ public class LoginController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(){
-		return "redirect:/users";
+		return "main";
 	}
-
+	
 	@RequestMapping(value = "/login")
 	public String login(@ModelAttribute(value = "user") User user,HttpServletRequest request,HttpServletResponse response, Model model){
 		Boolean result = (Boolean)request.getSession().getAttribute("connect");

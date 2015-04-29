@@ -25,7 +25,7 @@
 <div class = "header" id = "header">
 	<div class = "container">
 		<div class = "row">
-			<div class = "span7"> <h2>Write somethink here</h2>
+			<div class = "span7"> <h2>Just do it </h2>
 				<div style = "height: 80px" class = "row">
 					<div class = "span6">					
 						<c:choose>
@@ -38,7 +38,12 @@
 								<div id = "show" class="alert alert-error">
 									${error}	
 								</div>
-							</c:when>							
+							</c:when>	
+							<c:otherwise>
+								<p style="color: #b4c2e0">Админ: Логин: admin_0, Пароль: admin_0</p>
+								<p style="color: #b4c2e0">Пользователь: Логин: user_101, Пароль: user_101</p>
+								<a style = "color: white; text-decoration: underline;" href="${pageContext.request.contextPath}" > (список проектов)</a>
+							</c:otherwise>						
 						</c:choose>	
 					</div>
 				</div>
@@ -62,6 +67,7 @@
 						    <input type="checkbox" name = "remember-me"> Запомнить
 						</label>
 						</fieldset>
+						
 					</form>	
 				</div>
 			</div>
@@ -72,7 +78,8 @@
 <div class = "container">
 	<div class = "row" id = "main-conteiner">
 		<div class = "span7" >
-			<img src="<c:url value='/resources/img/main-pic.png' />" id = "main-pic" >
+		
+		<img src="<c:url value='/resources/img/main-pic.png' />" id = "main-pic" >
 		</div>
 		<div class = "span5" >
 			<p class = "main-registration-text">Регистрация</p>	

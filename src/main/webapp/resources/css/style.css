@@ -18,6 +18,22 @@ body{
  
  
 }
+#general-pic-btn{
+	float: left;
+	margin-top: 15px;
+}
+#general-main-page{
+	margin-top:15px;
+	padding:20px;
+	border: 1px solid white;
+	border-radius:6px; 
+	-webkit-border-radius:6px; 
+	-moz-border-radius:5px; 
+	-khtml-border-radius:10px;
+}
+#general-button{
+	margin-top: 15px;
+}
 #show2{
 	visibility: hidden;	
 }
