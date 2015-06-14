@@ -18,10 +18,9 @@ import com.prokopiv.web.model.User;
 @Controller
 public class LoginController {
 	
-	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String main(){
-		return "main";
+		return "redirect:/login";
 	}
 	
 	@RequestMapping(value = "/login")
