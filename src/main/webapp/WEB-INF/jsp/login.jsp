@@ -42,7 +42,7 @@
 							<c:otherwise>
 								<p style="color: #b4c2e0">Админ: Логин: admin_0, Пароль: admin_0</p>
 								<p style="color: #b4c2e0">Пользователь: Логин: user_101, Пароль: user_101</p>
-								<a style = "color: white; text-decoration: underline;" href="${pageContext.request.contextPath}/" > (список проектов)</a>
+								<%-- <a style = "color: white; text-decoration: underline;" href="${pageContext.request.contextPath}/" > (список проектов)</a> --%>
 							</c:otherwise>						
 						</c:choose>	
 					</div>
