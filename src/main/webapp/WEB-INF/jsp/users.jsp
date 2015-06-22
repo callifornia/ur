@@ -5,11 +5,12 @@
 <html lang="ru">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Пользователи</title>
+<title>Users</title>
 	<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.10.2.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js' />"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/show_message.js' />"></script>
+	<link rel="icon" href="<c:url value="/resources/img/123.ico" />">
 	<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/bootstrap.css' />" />
 	<link type="text/css" rel="stylesheet"  href="<c:url value='/resources/css/style.css' />" />
 </head>
@@ -20,12 +21,12 @@
 				<div class = "span12"> 
 					<form:form name="searchForm" action="${pageContext.request.contextPath}/searchRequest" method = "POST" modelAttribute="search">
 						 <div id = "users-search-main-div">
-					    	<label id = "users-search-label">Поиск</label>
+					    	<label id = "users-search-label">Search</label>
 					    	<form:select path="searchType" class="span2" id = "users-search-select">
 					    			<form:option  value="all" checked = "checked">All</form:option>
-					    			<form:option  value="login" checked = "checked">Логин</form:option>
-					    			<form:option  value="phone" checked = "checked">Телефон</form:option>
-					    			<form:option  value="lastName" checked = "checked">ФИО</form:option>
+					    			<form:option  value="login" checked = "checked">Login</form:option>
+					    			<form:option  value="phone" checked = "checked">Phone</form:option>
+					    			<form:option  value="lastName" checked = "checked">Name</form:option>
 					    	</form:select>
 	 						<form:input path="searchRow" class="span2" id="appendedInputButton" size="16" type="text" name = "name" />  						
 	  						<button class="btn btn-inverse" id = "users-search-go" type="submit">Go!</button>  						
@@ -78,22 +79,22 @@
 			<thead style="background-color: #596068; color: white">		
 				<tr>
 					<th>id</th>
-					<th>Логин</th>
-					<th>Роль</th>
-					<th>ФИО</th>
-					<th>Телефон</th>
-					<th>Статус</th>
-					<th>Почта</th>
-					<th>Стать</th>
-					<th>Что с ним сделать?</th>
+					<th>Login</th>
+					<th>Role</th>
+					<th>Name</th>
+					<th>Phone</th>
+					<th>Available</th>
+					<th>E-mail</th>
+					<th>Gender</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
 			<c:if test="${empty user}">
 					<tr>
 						<td colspan="9" style = "padding-top: 50px;">
-							<p align="center"  class = "search-empty-result">По данному запросу нет результатов</p>
-							<p align="center"  class = "search-empty-result-small">(попробуйте изменить параметры поиска)</p>
+							<p align="center"  class = "search-empty-result">Nothing found</p>
+							<p align="center"  class = "search-empty-result-small">(try to change search parameter)</p>
 						</td>
 					</tr>
 				</c:if>
@@ -118,17 +119,17 @@
 								<td>${user.userPhone }</td>
 								<c:choose>
 									<c:when test="${user.userEnable == true }">
-										<td class = "error">живой</td>
+										<td class = "error">available</td>
 									</c:when>
 									<c:when test="${user.userEnable == false }">
-										<td>казнен</td>
+										<td>banned</td>
 									</c:when>
 								</c:choose>
 								<td>${user.userMail}</td>
 								<td>${user.userGender}</td>
 								<c:choose>
 									<c:when test="${user.userEnable == false }">
-										<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">воскресить</a></td>
+										<td><a href="${pageContext.request.contextPath}/recovery/${user.userId}">recovery</a></td>
 									</c:when>
 									<c:otherwise>
 									<td align="center">
@@ -162,10 +163,10 @@
 								<td>${user.userPhone }</td>
 								<c:choose>
 									<c:when test="${user.userEnable == true }">
-										<td class = "error">живой</td>
+										<td class = "error">available</td>
 									</c:when>
 									<c:when test="${user.userEnable == false }">
-										<td>казнен</td>
+										<td>banned</td>
 									</c:when>
 								</c:choose>
 								<td>${user.userMail}</td>
@@ -196,20 +197,20 @@
 			<table class="table table-hover table-bordered table-striped">
 				<thead style="background-color: #596068; color: white">		
 				<tr>
-					<td>Логин</td>
-					<td>Роль</td>
-					<td>ФИО</td>
-					<td>Телефон</td>
-					<td>Почта</td>
-					<td>Стать</td>
+					<td>Login</td>
+					<td>Role</td>
+					<td>Name</td>
+					<td>Phone</td>
+					<td>E-mail</td>
+					<td>Gender</td>
 				</tr>
 				</thead>
 				<tbody>
 				<c:if test="${empty user}">
 					<tr>
 						<td colspan="6" style = "padding-top: 50px;">
-							<p align="center"  class = "search-empty-result">По данному запросу нет результатов</p>
-							<p align="center"  class = "search-empty-result-small">(попробуйте изменить параметры поиска)</p>
+							<p align="center"  class = "search-empty-result">Nothing found</p>
+							<p align="center"  class = "search-empty-result-small">(try to change search parameter)</p>
 						</td>
 					</tr>
 				</c:if>
@@ -262,11 +263,11 @@
 	</div>
 	
 	<!-- footer -->
-	<div class = "navbar navbar-default navbar-fixed-bottom" id = "footer">	
+	
 		<div class = "container">			
-			<font class = "navbar-text">© 2015 Developed by Grisha</font>	
+			<font class = "navbar-text">©2015 CRUD with Spring MVC</font>	
 		</div>
-	</div>
+
 
 </body>
 </html>

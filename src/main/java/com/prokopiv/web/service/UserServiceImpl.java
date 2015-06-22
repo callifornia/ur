@@ -161,13 +161,13 @@ public class UserServiceImpl implements UserService {
 			Map<String, String> search = new HashMap<String,String>();
 			
 			search.put("all", "all");
-			search.put("phone", "Телефон");
-			search.put("lastName", "ФИО");
-			search.put("login", "Логин");
+			search.put("phone", "Phone");
+			search.put("lastName", "Name");
+			search.put("login", "Login");
 			
 			Map<String,String> userRole = new HashMap<String,String>();
-			userRole.put("ROLE_ADMIN", "Админ");
-			userRole.put("ROLE_REGULAR_USER", "Пользователь");
+			userRole.put("ROLE_ADMIN", "admin");
+			userRole.put("ROLE_REGULAR_USER", "user");
 			
 			List<String> userEducation = new ArrayList<String>();
 			userEducation.add("Degree");

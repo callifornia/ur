@@ -67,9 +67,9 @@ public class MainController {
 	public String initializeTables(Model model, RedirectAttributes redirectAttribute){
 		logger.info("Initialization tables");
 		if(userService.initializationDataBase()){
-			redirectAttribute.addFlashAttribute("success", "Таблицы успешно созданы");
+			redirectAttribute.addFlashAttribute("success", "Table successful created");
 		} else {
-			redirectAttribute.addFlashAttribute("error", "Не удалось создать таблицы. Проверьте подключения к БД. (dbconfig.preperties)");
+			redirectAttribute.addFlashAttribute("error", "Can't create the tables");
 		}
 		return "redirect:/login";
 	}
@@ -85,9 +85,9 @@ public class MainController {
 	@RequestMapping(value = "/recovery/{id}", method = RequestMethod.GET)
 	public String recovery(@PathVariable(value  = "id") String id, Model model, RedirectAttributes redirectAttribute){
 		if(userService.recoveryUser(id)){
-			redirectAttribute.addFlashAttribute("success", "Пользователь воскрешен");
+			redirectAttribute.addFlashAttribute("success", "User recovered");
 		} else{
-			redirectAttribute.addFlashAttribute("error", "Не удалось воскресить польхователя");
+			redirectAttribute.addFlashAttribute("error", "Can't recover user");
 		};
 		return "redirect:/users";
 	}
@@ -119,7 +119,7 @@ public class MainController {
 				}
 			} catch(Exception e){
 				e.printStackTrace();
-				model.addAttribute("error", "Проверьте подключения к БД. (dbconfig.preperties)");
+				model.addAttribute("error", "Can't connect to the data base");
 			}
 			return "login";
 		}
@@ -134,9 +134,9 @@ public class MainController {
 			return "register";
 		} else {
 			if(userService.insertUser(user)){
-				redirectAttribute.addFlashAttribute("success", "Пользователь зарегестрирован");
+				redirectAttribute.addFlashAttribute("success", "User successful registered");
 			} else {
-				redirectAttribute.addFlashAttribute("error", "Не удалось зарегестрировать пользователя");
+				redirectAttribute.addFlashAttribute("error", "Can't register user");
 			}
 			return "redirect:/users";
 		}
@@ -156,9 +156,9 @@ public class MainController {
 		} else {
 			//check if user successful updated
 			if(userService.updateUser(user)){
-				redirectAttribute.addFlashAttribute("success", "Данные успешно обновлены");
+				redirectAttribute.addFlashAttribute("success", "User successful update");
 			} else {
-				redirectAttribute.addFlashAttribute("error", "Не удалось обновить пользователя");
+				redirectAttribute.addFlashAttribute("error", "Can't update user");
 			}
 			return "redirect:/users";
 		}
@@ -206,9 +206,9 @@ public class MainController {
 	public String delete(@PathVariable("id") String id, ModelMap model, RedirectAttributes redirectAttribute){
 		//check if user successful deleted
 		if(userService.deleteUser(id)){
-			redirectAttribute.addFlashAttribute("success", "Пользователь казнен");
+			redirectAttribute.addFlashAttribute("success", "User successful banned");
 		} else {
-			redirectAttribute.addFlashAttribute("error", "Не удалось казнить пользователя");
+			redirectAttribute.addFlashAttribute("error", "Can't banned user");
 		}
 		return "redirect:/users";
 	}	
